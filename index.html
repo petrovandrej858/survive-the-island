@@ -60,11 +60,12 @@ body.reel #exit{display:block}
 #hint{position:fixed;z-index:6;bottom:14px;left:50%;transform:translateX(-50%);font-size:14px;white-space:nowrap}
 #guide{position:fixed;z-index:6;top:96px;right:14px;font-weight:800;display:none}#guide.on{display:block}
 #pexit{position:fixed;z-index:6;right:14px;bottom:14px}
+#act{position:fixed;z-index:7;right:22px;bottom:84px;width:104px;height:104px;border-radius:50%;font:800 17px 'Baloo 2',sans-serif;line-height:1;box-shadow:0 6px 0 #b8432a;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;animation:pulse 1.2s infinite}#act span{font-size:34px}#act.on{display:flex}@keyframes pulse{50%{transform:scale(1.07)}}
 #joy{position:fixed;z-index:6;left:24px;bottom:24px;width:130px;height:130px;border-radius:50%;background:rgba(255,250,240,.35);border:3px solid rgba(255,255,255,.7);display:none;touch-action:none}
 #knob{position:absolute;left:40px;top:40px;width:50px;height:50px;border-radius:50%;background:var(--sand);box-shadow:0 4px 0 rgba(0,0,0,.2)}
 body.touch #joy{display:block}body.touch #hint{display:none}
-body.play #card{bottom:auto;top:150px}
-@media(max-width:600px){#coco,#guide{top:150px}body.play #card{top:200px}}
+body.play #card{bottom:auto;top:196px}
+@media(max-width:600px){#coco,#guide{top:150px}body.play #card{top:250px}}
 </style>
 </head>
 <body>
@@ -84,7 +85,7 @@ body.play #card{bottom:auto;top:150px}
 </div>
 <div class="hud" id="bottom"><button class="alt" id="tour" type="button">Fly around</button><button class="alt" id="reelBtn" type="button">Reel mode</button><button id="playBtn" type="button">Walk</button><button id="gameBtn" type="button">Join the game</button></div>
 <div id="pui"><div class="chip" id="coco">Coconuts 0/20</div><div class="chip" id="hint">Walk: WASD or arrows · Turn camera: Q / E or drag</div>
-<div id="joy"><div id="knob"></div></div><button id="pexit" type="button">Exit</button><div class="chip" id="guide"></div></div>
+<div id="joy"><div id="knob"></div></div><button id="pexit" type="button">Exit</button><button id="act" type="button"></button><div class="chip" id="guide"></div></div>
 <div class="chip" id="card"><button class="x" id="cx" type="button" aria-label="Close">×</button><div id="cardIn"></div></div>
 <button id="exit" type="button">Exit reel (Esc)</button>
 
@@ -298,10 +299,11 @@ function build(){
   for(let i=0;i<6;i++)mk(new THREE.CylinderGeometry(1.15-i*.1,1.25-i*.1,1.1,10),i%2?'#ff6b4a':'#ffffff',lx,-.2+.55+i*1.1,lz);
   mk(new THREE.CylinderGeometry(.75,.75,.9,10),new THREE.MeshBasicMaterial({color:'#ffe08a'}),lx,7.0,lz);
   mk(new THREE.ConeGeometry(1,1,10),'#27505d',lx,7.95,lz);LH.x=lx;LH.z=lz;
+  makeSpots();
   // palms + rocks fill the gaps
   let n=0;for(let i=0;i<900&&n<IR*1.6;i++){const a=Math.random()*6.283,r=Math.sqrt(Math.random())*IR*.92*shape(a),x=Math.cos(a)*r,z=Math.sin(a)*r;
     if(free(x,z,1.1)){occ.push({x,z,r:1.1});PALMS.push(palm(x,0,z,null,.85+Math.random()*.4));n++}}
-  for(let i=0;i<IR*.9;i++){const a=Math.random()*6.283,r=IR*shape(a)+1+Math.random()*2.5;
+  for(let i=0;i<IR*.9;i++){const a=Math.random()*6.283,r=IR*shape(a)+1+Math.random()*2.5;if(SPOTS.some(s=>Math.hypot(s.x-Math.cos(a)*r,s.z-Math.sin(a)*r)<4.5))continue;
     if(Math.random()<.55)PALMS.push(palm(Math.cos(a)*r,-.25,Math.sin(a)*r,null,.8+Math.random()*.3));
     else mk(new THREE.DodecahedronGeometry(.4+Math.random()*.5),'#9aa1a6',Math.cos(a)*r,-.2,Math.sin(a)*r)}
   const sc=sun.shadow.camera,e=IR+10;sc.left=sc.bottom=-e;sc.right=sc.top=e;sc.far=400;sc.updateProjectionMatrix();
@@ -372,9 +374,9 @@ function makePlayer(){const g=new THREE.Group();const P={};const LK=(window.STI_
   mk(new THREE.CylinderGeometry(.5,.5,.06,12),HT,0,1.76,0,g);mk(new THREE.ConeGeometry(.28,.3,10),HT,0,1.92,0,g);
   [P.a1,P.a2,P.l1,P.l2].forEach(m=>{m.geometry.translate(0,-.25,0);m.position.y+=.25});
   const arrow=mk(new THREE.ConeGeometry(.3,.9,4),new THREE.MeshBasicMaterial({color:'#ff6b4a'}),0,2.7,0,g);arrow.rotation.x=Math.PI/2;arrow.visible=false;P.arrow=arrow;
-  g.userData=P;scene.add(g);return g}
+  addTools(P);g.userData=P;scene.add(g);return g}
 function setupPlay(){player=makePlayer();player.visible=false;
-  cols=occ.filter(o=>!o.yard&&o.r<6).map(o=>({x:o.x,z:o.z,r:o.r>2?2.05:.45}));
+  cols=occ.filter(o=>!o.yard&&o.r<6).map(o=>({x:o.x,z:o.z,r:o.r>2?2.05:.45}));SPOTS.forEach(s=>{if(s.cr)cols.push({x:s.x,z:s.z,r:s.cr})});
   if(LH.x!=null)cols.push({x:LH.x,z:LH.z,r:1.4});[-3,3].forEach(x=>cols.push({x,z:-1.5,r:.35}));
   const nutG=new THREE.SphereGeometry(.28,7,6);let n=0;
   for(let i=0;i<600&&n<20;i++){const a=Math.random()*6.283,r=3+Math.sqrt(Math.random())*(IR*.95+2),x=Math.cos(a)*r*shape(a),z=Math.sin(a)*r*shape(a);
@@ -386,7 +388,7 @@ function startPlay(){if(!player)setupPlay();PLAY.on=true;document.body.classList
   if(matchMedia('(pointer:coarse)').matches)document.body.classList.add('touch');
   player.visible=true;nuts.forEach(n=>n.visible=!n.userData.got);player.position.set(0,0,4.5);fly=null;ctl.enabled=false;marker.visible=false;$('card').classList.remove('on');
   PLAY.last=performance.now();blip(660);updCoco()}
-function stopPlay(){PLAY.on=false;document.body.classList.remove('play');player.visible=false;nuts.forEach(n=>n.visible=false);ctl.enabled=true;$('guide').classList.remove('on');
+function stopPlay(){if(PLAY.anim)endAction();SPOTS.forEach(s=>s.icon.visible=false);$('act').classList.remove('on');PLAY.on=false;document.body.classList.remove('play');player.visible=false;nuts.forEach(n=>n.visible=false);ctl.enabled=true;$('guide').classList.remove('on');
   $('card').classList.remove('on');const w=wide();flyTo(w.p,w.t,1.4)}
 const updCoco=()=>$('coco').textContent=`Coconuts ${PLAY.got}/${nuts.length}`+(PLAY.got===nuts.length&&nuts.length?' · island legend!':'');
 $('playBtn').onclick=startPlay;$('pexit').onclick=stopPlay;
@@ -402,7 +404,7 @@ addEventListener('keyup',e=>{PLAY.keys[e.key.toLowerCase()]=0});
 function playStep(t){const now=performance.now(),dt=Math.min(.05,(now-PLAY.last)/1000);PLAY.last=now;const K=PLAY.keys;
   let ix=(K.d||K.arrowright?1:0)-(K.a||K.arrowleft?1:0)+PLAY.joy.x,iz=(K.s||K.arrowdown?1:0)-(K.w||K.arrowup?1:0)+PLAY.joy.y;
   if(K.q)PLAY.yaw+=dt*1.8;if(K.e)PLAY.yaw-=dt*1.8;
-  const L=Math.hypot(ix,iz);if(L>1){ix/=L;iz/=L}
+  const L=Math.hypot(ix,iz);if(L>1){ix/=L;iz/=L}if(PLAY.anim){ix=0;iz=0}
   const sy=Math.sin(PLAY.yaw),cy=Math.cos(PLAY.yaw);const wx=ix*cy+iz*sy,wz=-ix*sy+iz*cy;const sp=6.5*(K.shift?1.6:1);
   let x=player.position.x+wx*sp*dt,z=player.position.z+wz*sp*dt;
   for(const c of cols){const dx=x-c.x,dz=z-c.z,d=Math.hypot(dx,dz),m=c.r+.4;if(d<m&&d>0){x=c.x+dx/d*m;z=c.z+dz/d*m}}
@@ -417,11 +419,111 @@ function playStep(t){const now=performance.now(),dt=Math.min(.05,(now-PLAY.last)
   // nearby hut
   let best=null,bd=4.6;for(const h of huts){const d=Math.hypot(h.x-x,h.z-z);if(d<bd){bd=d;best=h}}
   if(best!==PLAY.near){PLAY.near=best;if(best){const p=best.p;$('cardIn').innerHTML=`<h2>@${esc(p.u)}</h2><p>${p.u===CFG.handle.slice(1)?'The castaway who started it all':p.game?'Joined through the game':'Moved in on day '+p.day}${p.near?` · neighbour of @${esc(p.near)}`:''}</p>`+((p.x||[]).length?`<div class="tags">${p.x.map(e=>`<span>${esc(e)}</span>`).join('')}</div>`:'');$('card').classList.add('on');blip(520);if(PLAY.goal===best){PLAY.goal=null;$('guide').classList.remove('on');P.arrow.visible=false}}else $('card').classList.remove('on')}
+  spotStep(t,dt,x,z);
   // guide to searched hut
   if(PLAY.goal){const g=PLAY.goal,d=Math.hypot(g.x-x,g.z-z);P.arrow.visible=true;P.arrow.rotation.set(Math.PI/2,0,0);
     const ang=Math.atan2(g.x-x,g.z-z)-player.rotation.y;P.arrow.position.set(Math.sin(ang)*1.2,2.6,Math.cos(ang)*1.2);P.arrow.rotation.z=-ang;P.arrow.lookAt(new V(g.x,2.6,g.z));P.arrow.rotateX(Math.PI/2);
-    $('guide').textContent=`@${g.p.u}: ${Math.round(d)} m`;$('guide').classList.add('on')}
+    $('guide').textContent=`${g.label||'@'+g.p.u}: ${Math.round(d)} m`;$('guide').classList.add('on')}
 }
+/* ===== WORK SPOTS: forest, quarry, fishing piers, dig spots — tasks happen in the world ===== */
+const SPOTS=[];let FX=[];
+const SPOT_INFO={chop:{icon:'🪓',label:'Chop',goal:'🪓 Forest',reach:2.4,dur:1.9},mine:{icon:'⛏️',label:'Mine',goal:'⛏️ Quarry',reach:2.7,dur:1.9},
+  fish:{icon:'🎣',label:'Fish',goal:'🎣 Fishing pier',reach:2.2,dur:3.0},explore:{icon:'❓',label:'Dig',goal:'❓ Dig spot',reach:2.0,dur:2.2}};
+function iconTex(ch){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');
+  x.fillStyle='#fbf1d8';x.beginPath();x.arc(64,64,56,0,7);x.fill();x.lineWidth=8;x.strokeStyle='#ff6b4a';x.stroke();
+  x.font='64px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(ch,64,70);
+  const t=new THREE.CanvasTexture(c);return t}
+function textTex(s){const c=document.createElement('canvas');c.width=512;c.height=128;const x=c.getContext('2d');
+  x.font='800 70px "Baloo 2","Apple Color Emoji","Segoe UI Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';
+  x.lineWidth=14;x.strokeStyle='#0b2e36';x.strokeText(s,256,70);x.fillStyle='#fff';x.fillText(s,256,70);return new THREE.CanvasTexture(c)}
+function addSpot(type,x,z,obj,extra){const icon=new THREE.Sprite(new THREE.SpriteMaterial({map:iconTex(SPOT_INFO[type].icon),depthTest:false}));
+  icon.scale.set(1.3,1.3,1);icon.renderOrder=5;icon.visible=false;scene.add(icon);const s=Object.assign({type,x,z,obj,icon,iy:(extra&&extra.iy)||3.4},extra||{});SPOTS.push(s);return s}
+function bigTree(x,z){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=Math.random()*6.28;scene.add(g);
+  mk(new THREE.CylinderGeometry(.32,.45,2.2,7),'#7a5232',0,1.1,0,g);
+  [[0,2.7,0,1.25],[.6,2.3,.3,.85],[-.55,2.4,-.25,.9],[0,3.4,0,.85]].forEach(([a,b,c,r])=>mk(new THREE.DodecahedronGeometry(r),'#2f8f3f',a,b,c,g));
+  mk(new THREE.CylinderGeometry(.5,.5,.12,8),'#b98a5a',.9,.06,.4,g);return g}
+function boulders(x,z){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=Math.random()*6.28;scene.add(g);
+  mk(new THREE.DodecahedronGeometry(.95),'#8d939a',0,.55,0,g);mk(new THREE.DodecahedronGeometry(.55),'#a3a9ae',.8,.3,.35,g);mk(new THREE.DodecahedronGeometry(.4),'#7d838a',-.6,.25,.5,g);
+  [[.2,.9,.6],[-.3,.7,.7]].forEach(([a,b,c])=>mk(B(.18,.18,.06),new THREE.MeshBasicMaterial({color:'#ffd166'}),a,b,c,g));return g}
+function pier(a){const r0=IR*shape(a)+2.4,g=new THREE.Group();g.position.set(Math.cos(a)*r0,0,Math.sin(a)*r0);g.rotation.y=-a+Math.PI/2;scene.add(g);
+  for(let i=0;i<7;i++)mk(B(1.6,.12,.55),i%2?'#a0764a':'#8b6538',0,-.1,1.2+i*.6,g);
+  [[-.75,1.2],[.75,1.2],[-.75,4.6],[.75,4.6]].forEach(([px,pz])=>mk(new THREE.CylinderGeometry(.09,.09,1.4,6),'#6b4a2b',px,-.5,pz,g));
+  const sx=Math.cos(a)*(r0+.6),sz=Math.sin(a)*(r0+.6),wx=Math.cos(a)*(r0+8.5),wz=Math.sin(a)*(r0+8.5);
+  return{g,sx,sz,wx,wz}}
+function digMark(x,z){const g=new THREE.Group();g.position.set(x,-.22,z);g.rotation.y=Math.random()*3;scene.add(g);
+  [.785,-.785].forEach(r=>{const m=mk(B(1.1,.05,.2),'#c1121f',0,.03,0,g);m.rotation.y=r});return g}
+function makeSpots(){
+  const maxH=Math.max(10,...huts.map(h=>Math.hypot(h.x,h.z))),rIn=Math.min(maxH+2.5,IR*.8),rOut=IR*.9;const a0=Math.random()*6.28;
+  const ring=(aC,n,r,mkr,type,cr)=>{let made=0;for(let i=0;i<80&&made<n;i++){const a=aC+(Math.random()-.5)*.9,rr=rIn+Math.random()*(rOut-rIn),x=Math.cos(a)*rr*shape(a),z=Math.sin(a)*rr*shape(a);
+    if(free(x,z,r)){occ.push({x,z,r});const o=mkr(x,z);addSpot(type,x,z,o,{cr,iy:type==='chop'?4.6:2.6});made++}}};
+  ring(a0,4,1.6,bigTree,'chop',.55);ring(a0+2.1,3,1.8,boulders,'mine',1.05);
+  [a0+1.05,a0+3.2,a0+5.2].forEach(a=>{if(LH.x!=null&&Math.hypot(Math.cos(a)*IR-LH.x,Math.sin(a)*IR-LH.z)<8)a+=.5;const p=pier(a);addSpot('fish',p.sx,p.sz,p.g,{wx:p.wx,wz:p.wz,iy:2.6,stand:1})});
+  [a0+.5,a0+2.6,a0+4.3].forEach(a=>{const r=IR*shape(a)+1.6,x=Math.cos(a)*r,z=Math.sin(a)*r;addSpot('explore',x,z,digMark(x,z),{iy:2.2})})}
+function addTools(P){const tools={};const hand=new THREE.Group();hand.position.set(0,-.55,0);P.a2.add(hand);
+  const T=n=>{const g=new THREE.Group();g.visible=false;hand.add(g);tools[n]=g;return g};
+  let g=T('chop');mk(new THREE.CylinderGeometry(.04,.04,.9,6),'#8b5a2b',0,-.35,0,g);mk(B(.08,.3,.32),'#c0c6cc',0,-.72,.14,g);
+  g=T('mine');mk(new THREE.CylinderGeometry(.04,.04,.9,6),'#8b5a2b',0,-.35,0,g);const pk=mk(B(.07,.08,.75),'#9aa1a6',0,-.78,0,g);
+  g=T('explore');mk(new THREE.CylinderGeometry(.035,.035,.95,6),'#8b5a2b',0,-.38,0,g);mk(B(.3,.36,.05),'#9aa1a6',0,-.95,0,g);
+  g=T('fish');mk(new THREE.CylinderGeometry(.02,.035,2.6,6),'#5b3a1e',0,-1.25,0,g);const tip=new THREE.Object3D();tip.position.set(0,-2.55,0);g.add(tip);tools.tip=tip;
+  P.tools=tools}
+const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V(),new V()]),new THREE.LineBasicMaterial({color:'#ffffff'}));line.visible=false;line.frustumCulled=false;scene.add(line);
+const bob=mk(new THREE.SphereGeometry(.14,8,6),'#ff3b3b',0,0,0);bob.visible=false;
+function popFX(mesh,x,y,z,vx,vy,vz,life=1.1){mesh.position.set(x,y,z);scene.add(mesh);FX.push({m:mesh,v:new V(vx,vy,vz),t:0,life})}
+function floatText(s,x,y,z){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:textTex(s),depthTest:false,transparent:true}));sp.scale.set(4,1,1);sp.renderOrder=9;
+  sp.position.set(x,y,z);scene.add(sp);FX.push({m:sp,v:new V(0,1.4,0),t:0,life:1.8,fade:1,nograv:1})}
+function goToSpot(type){if(!PLAY.on)startPlay();const x=player.position.x,z=player.position.z;let best=null,bd=1e9;
+  SPOTS.forEach(s=>{if(s.type!==type)return;const d=Math.hypot(s.x-x,s.z-z);if(d<bd){bd=d;best=s}});
+  if(best){PLAY.goal={x:best.x,z:best.z,label:SPOT_INFO[type].goal,spot:best};PLAY.near=null}}
+function startAction(s){const api=window.STI_api;if(!api||!api.me()){api&&api.open();return}
+  if(PLAY.anim)return;const px=player.position.x,pz=player.position.z;
+  player.rotation.y=s.type==='fish'?Math.atan2(s.wx-px,s.wz-pz):Math.atan2(s.x-px,s.z-pz);
+  const A=PLAY.anim={s,t0:performance.now(),res:null,err:null,info:SPOT_INFO[s.type]};const P=player.userData;
+  Object.keys(P.tools).forEach(k=>{if(k!=='tip')P.tools[k].visible=k===s.type});$('act').classList.remove('on');
+  api.doTask(s.type).then(r=>A.res=r,e=>A.err=e);blip(440)}
+function endAction(){const A=PLAY.anim,P=player.userData;PLAY.anim=null;Object.keys(P.tools).forEach(k=>{if(k!=='tip')P.tools[k].visible=false});
+  P.a2.rotation.set(0,0,0);P.a1.rotation.set(0,0,0);line.visible=false;bob.visible=false;if(A.s.obj)A.s.obj.rotation.z=0;
+  const api=window.STI_api,px=player.position.x,py=player.position.y,pz=player.position.z;
+  if(A.err){api.toast(api.errText(A.err));return}
+  const r=A.res,gn=r.gain||{},parts=[];if(gn.wood)parts.push('+'+gn.wood+' wood');if(gn.fish)parts.push('+'+gn.fish+' fish');if(gn.stone)parts.push('+'+gn.stone+' stone');
+  floatText(parts.length?parts.join(' '):'nothing…',px,py+3,pz);api.toast(r.msg);blip(parts.length?990:330);
+  const sx=A.s.type==='fish'?A.s.wx:A.s.x,sz=A.s.type==='fish'?A.s.wz:A.s.z,dx=px-sx,dz=pz-sz,L=Math.hypot(dx,dz)||1;
+  if(A.s.type==='fish'&&gn.fish){const f=new THREE.Group();mk(B(.6,.25,.12),'#4cc9f0',0,0,0,f);mk(new THREE.ConeGeometry(.18,.3,4),'#4cc9f0',-.4,0,0,f).rotation.z=Math.PI/2;
+    popFX(f,sx,-.3,sz,dx/L*5.5,7,dz/L*5.5,1.2)}
+  if(A.s.type==='chop')for(let i=0;i<Math.min(4,gn.wood||0);i++){const lg=new THREE.Mesh(new THREE.CylinderGeometry(.14,.14,.7,6),M('#8b5a2b'));lg.rotation.z=Math.PI/2;popFX(lg,sx,1,sz,(Math.random()-.5)*3+dx/L*2,5+Math.random()*2,(Math.random()-.5)*3+dz/L*2)}
+  if(A.s.type==='mine')for(let i=0;i<Math.min(3,gn.stone||0);i++)popFX(new THREE.Mesh(new THREE.DodecahedronGeometry(.22),M('#9aa1a6')),sx,1,sz,(Math.random()-.5)*3+dx/L*2,5+Math.random()*2,(Math.random()-.5)*3+dz/L*2);
+  if(A.s.type==='explore'&&(gn.wood||gn.fish||gn.stone)){const c=new THREE.Group();mk(B(.75,.42,.48),'#7a4a22',0,0,0,c);mk(B(.8,.1,.52),'#e0b041',0,.25,0,c);popFX(c,sx,-.3,sz,0,6,0,1.4)}
+}
+function spotStep(t,dt,x,z){const P=player.userData,now=performance.now();
+  SPOTS.forEach(s=>{s.icon.visible=!PLAY.anim||PLAY.anim.s!==s;s.icon.position.set(s.x,s.iy+Math.sin(t*2.5+s.x)*.2,s.z)});
+  // effects
+  FX=FX.filter(f=>{f.t+=dt;if(!f.nograv)f.v.y-=16*dt;f.m.position.addScaledVector(f.v,dt);if(!f.nograv){f.m.rotation.x+=dt*5;f.m.rotation.z+=dt*3}
+    if(f.fade)f.m.material.opacity=Math.max(0,1-f.t/f.life);if(f.t>f.life){scene.remove(f.m);return false}return true});
+  const A=PLAY.anim;
+  if(A){const el=(now-A.t0)/1000,D=A.info.dur,ty=A.s.type;
+    if(A.err&&el>.4){endAction();return}
+    if(ty==='chop'||ty==='mine'||ty==='explore'){const sp=ty==='explore'?2.6:2.2,ph=(el*sp)%1;
+      P.a2.rotation.x=ty==='explore'?-0.6-Math.sin(ph*Math.PI)*1.1:(ph<.6?-2.9+ph/.6*.4:-2.5+(ph-.6)/.4*1.9);P.a1.rotation.x=P.a2.rotation.x*.5;
+      if(ph>.85&&A.s.obj&&ty!=='explore')A.s.obj.rotation.z=Math.sin(el*60)*.05;else if(A.s.obj)A.s.obj.rotation.z=0;
+      if(ph>.85&&!A.hit){A.hit=1;blip(ty==='chop'?300:600);const cx=A.s.x,cz=A.s.z;
+        popFX(new THREE.Mesh(new THREE.BoxGeometry(.12,.12,.12),M(ty==='chop'?'#d2ab73':ty==='mine'?'#ffd166':'#e6cf94')),cx+(x-cx)*.4,ty==='explore'?0:1.2,cz+(z-cz)*.4,(Math.random()-.5)*3,4,(Math.random()-.5)*3,.6)}
+      if(ph<.5)A.hit=0}
+    else if(ty==='fish'){const tip=P.tools.tip;
+      if(el<.6)P.a2.rotation.x=-2.9+el/.6*.3;else if(el<.9)P.a2.rotation.x=-2.6+(el-.6)/.3*1.1;else P.a2.rotation.x=-1.5+Math.sin(el*3)*.05;
+      const tp=new V();tip.getWorldPosition(tp);
+      const k=Math.min(1,Math.max(0,(el-.7)/.5)),bx=tp.x+(A.s.wx-tp.x)*k,bz=tp.z+(A.s.wz-tp.z)*k,
+        by=k<1?tp.y+(-.45-tp.y)*k+Math.sin(k*Math.PI)*2:-.45+Math.sin(el*5)*.06-((el>D-.5&&A.res)?.25:0);
+      bob.visible=el>.7;bob.position.set(bx,by,bz);line.visible=el>.7;line.geometry.setFromPoints([tp,bob.position.clone()])}
+    if(el>D&&(A.res||A.err))endAction();else if(el>D+8){A.err={code:'TIMEOUT'};endAction()}
+    $('act').classList.remove('on');$('card').classList.remove('on');return}
+  // nearest spot → action button
+  let best=null,bd=1e9;SPOTS.forEach(s=>{const d=Math.hypot(s.x-x,s.z-z);if(d<SPOT_INFO[s.type].reach+(s.cr||0)&&d<bd){bd=d;best=s}});
+  if(PLAY.goal&&PLAY.goal.spot&&best===PLAY.goal.spot){PLAY.goal=null;$('guide').classList.remove('on');P.arrow.visible=false}
+  const b=$('act');if(best){const api=window.STI_api,me=api&&api.me(),key=best.type+(me?1:0);if(b.dataset.k!==key){b.dataset.k=key;b.innerHTML=me?`<span>${SPOT_INFO[best.type].icon}</span>${SPOT_INFO[best.type].label}`:'<span>🏝️</span>Join to play'}
+    b.classList.add('on');b.onclick=()=>startAction(best)}else b.classList.remove('on');
+  if(best)$('card').classList.remove('on');
+  PLAY.spot=best}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(PLAY.on&&(e.key===' '||e.key==='Enter')&&PLAY.spot&&!PLAY.anim){e.preventDefault();startAction(PLAY.spot)}});
+
 function resize(){const w=wrap.clientWidth,h=wrap.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
 new ResizeObserver(resize).observe(wrap);
 
@@ -438,7 +540,7 @@ function loop(){requestAnimationFrame(loop);const t=clock.getElapsedTime(),now=p
      const hide=near&&u>-.05&&u<.93&&Math.hypot(cx+dx*u-g.position.x,cz+dz*u-g.position.z)<2.8||near&&Math.hypot(g.position.x-cx,g.position.z-cz)<5;g.visible=!hide}}
   renderer.render(scene,cam)}
 
-window.ISLAND={huts,byName,show,viewOf,flyTo,hut,scene,PLAY,startPlay,stopPlay,CFG,esc,resetPlayer:()=>{if(player){scene.remove(player);player=makePlayer();player.visible=PLAY.on}}};
+window.ISLAND={getPlayer:()=>player,goToSpot,SPOTS,huts,byName,show,viewOf,flyTo,hut,scene,PLAY,startPlay,stopPlay,CFG,esc,resetPlayer:()=>{if(player){scene.remove(player);player=makePlayer();player.visible=PLAY.on}}};
 const start=()=>{build();const w=wide(1.25);cam.position.copy(w.p);ctl.target.copy(w.t);resize();loop()};
 let started=false;const go=()=>{if(!started){started=true;try{start()}catch(err){$('sub').textContent='Could not start 3D: '+err.message}}};
 (document.fonts&&document.fonts.load?Promise.all([document.fonts.load('800 40px "Baloo 2"'),document.fonts.ready]):Promise.resolve()).then(go,go);setTimeout(go,2500);

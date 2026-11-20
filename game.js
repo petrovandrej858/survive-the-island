@@ -24,10 +24,10 @@
     { name: 'Fortress', c: '#6c757d', roof: '#343a40', x: ['tower', 'flag', 'watchtower', 'shield'] }];
   const COST = [null, { w: 10, s: 0, f: 0 }, { w: 20, s: 10, f: 0 }, { w: 35, s: 25, f: 10 }, { w: 60, s: 45, f: 25 }];
   const TASKS = [
-    { id: 'chop', icon: '🪓', name: 'Chop wood', hint: '+2–4 wood' },
-    { id: 'fish', icon: '🎣', name: 'Go fishing', hint: '+1–3 fish' },
-    { id: 'mine', icon: '⛏️', name: 'Mine stone', hint: '+1–2 stone' },
-    { id: 'explore', icon: '🧭', name: 'Explore', hint: 'Could be treasure…' }];
+    { id: 'chop', icon: '🪓', name: 'Go to the forest', hint: 'Chop trees: +2–4 wood' },
+    { id: 'fish', icon: '🎣', name: 'Go fishing', hint: 'From the pier: +1–3 fish' },
+    { id: 'mine', icon: '⛏️', name: 'Go to the quarry', hint: 'Mine rocks: +1–2 stone' },
+    { id: 'explore', icon: '❓', name: 'Find a dig spot', hint: 'Red X on the beach…' }];
   const SWATCH = {
     shirt: ['#f1faee', '#ff6b4a', '#2a9d8f', '#ffd166', '#9b5de5', '#16292f'],
     skin: ['#f6d5b8', '#e0a87a', '#c68642', '#8d5524', '#5c3a21'],
@@ -103,6 +103,7 @@
     if (TOKEN) { try { ME = await rpc('me', { p_token: TOKEN }) } catch (e) { if (e.code === 'NOT_FOUND') { TOKEN = null; store.set('sti_token', null) } } }
     window.__MAIN();
     ui();
+    stat();
   }
 
   // ---------- UI ----------
@@ -134,6 +135,8 @@
 #gtoast{position:fixed;z-index:9;left:50%;top:18px;transform:translate(-50%,-20px);opacity:0;transition:.25s;pointer-events:none;font-weight:800;max-width:90vw;text-align:center}
 #gtoast.on{opacity:1;transform:translate(-50%,0)}
 body.gp-open #top form{display:none}
+#gstat{position:fixed;z-index:6;top:142px;left:14px;font-weight:800;white-space:nowrap}
+@media(max-width:600px){#gstat{top:196px}}
 @media(max-width:600px){#gp{top:auto;max-height:72vh;bottom:0;right:0;width:100vw;border-radius:18px 18px 0 0}}`;
 
   const $ = id => document.getElementById(id);
@@ -166,7 +169,7 @@ body.gp-open #top form{display:none}
     return `<div class="sw" data-k="${key}">${SWATCH[key].map(c => `<b style="background:${c}" data-c="${c}" class="${draftLook[key] === c ? 'on' : ''}" role="button" aria-label="${key} ${c}"></b>`).join('')}</div>`;
   }
 
-  function render() {
+  let render = function () {
     if (!panel.classList.contains('on')) return;
     const s = STATE || {};
     let h = `<button class="x" type="button" aria-label="Close">×</button>`;
@@ -189,7 +192,7 @@ body.gp-open #top form{display:none}
       h += `<h2>@${esc(m.username)}</h2><p class="mut">${L.name} · Level ${m.hut_level} · Rank #${m.rank} · ${m.score} pts</p>
         <div class="res"><div>🪵 ${m.wood}<small>wood</small></div><div>🐟 ${m.fish}<small>fish</small></div><div>🪨 ${m.stone}<small>stone</small></div></div>
         <h3>⚡ Energy ${m.energy}</h3><div class="bar en"><i style="width:${Math.min(100, m.energy * 20)}%"></i></div><p class="mut">Refills every day. Come back tomorrow!</p>
-        <h3>Today’s tasks</h3><div class="tasks">${TASKS.map(t => `<button type="button" data-task="${t.id}" ${m.energy <= 0 ? 'disabled' : ''}><span>${t.icon}</span>${t.name}<small>${t.hint}</small></button>`).join('')}</div>
+        <h3>Today’s tasks</h3><p class="mut">Walk your survivor there and tap the action button. Each action uses 1 ⚡.</p><div class="tasks">${TASKS.map(t => `<button type="button" data-task="${t.id}" ${m.energy <= 0 ? 'disabled' : ''}><span>${t.icon}</span>${t.name}<small>${t.hint}</small></button>`).join('')}</div>
         <h3>🏠 Upgrade your hut</h3>${next ? `<p>Next: <b>${LV[m.hut_level + 1].name}</b></p><p class="mut">Costs 🪵 ${next.w}${next.s ? ` · 🪨 ${next.s}` : ''}${next.f ? ` · 🐟 ${next.f}` : ''}</p>
           <button id="g_up" type="button" ${can ? '' : 'disabled'}>Upgrade</button>` : `<p>Your fortress is complete. 🏰</p>`}
         <div class="row" style="margin-top:8px"><button class="alt" id="g_walk" type="button">Walk to my hut</button><button class="alt" id="g_see" type="button">Show my hut</button></div>
@@ -228,9 +231,7 @@ body.gp-open #top form{display:none}
         location.reload();
       } catch (e) { $('g_err').textContent = errText(e); j.disabled = false; j.textContent = 'Join the island' }
     };
-    panel.querySelectorAll('[data-task]').forEach(b => b.onclick = () => act(async () => {
-      const r = await rpc('do_task', { p_token: TOKEN, p_task: b.dataset.task }); ME = r.me; toast(r.msg);
-    }));
+    panel.querySelectorAll('[data-task]').forEach(b => b.onclick = () => { close(); window.ISLAND.goToSpot(b.dataset.task) });
     const up = $('g_up'); if (up) up.onclick = () => act(async () => {
       ME = await rpc('upgrade_hut', { p_token: TOKEN }); toast('Your hut is now a ' + LV[ME.hut_level].name + '! 🎉'); rebuildMyHut(); showMine();
     });
@@ -269,6 +270,29 @@ body.gp-open #top form{display:none}
     h.p.lvl = ME.hut_level; h.p.look = ME.look; levelize(h.p);
     I.scene.remove(h.g); h.g = I.hut(h.p, h.x, h.z);
   }
+
+  // ---------- API used by the 3D world ----------
+  function stat() {
+    let el = $('gstat');
+    if (!el) { el = document.createElement('div'); el.id = 'gstat'; el.className = 'chip'; const pui = $('pui'); if (!pui) return; pui.appendChild(el) }
+    el.style.display = ME ? '' : 'none';
+    if (ME) el.textContent = `⚡ ${ME.energy}  🪵 ${ME.wood}  🐟 ${ME.fish}  🪨 ${ME.stone}`;
+  }
+  window.STI_api = {
+    me: () => ME,
+    open: () => open(),
+    toast: t => toast(t),
+    errText: e => errText(e),
+    async doTask(task) {
+      const before = ME;
+      const r = await rpc('do_task', { p_token: TOKEN, p_task: task });
+      ME = r.me; stat();
+      r.gain = { wood: ME.wood - before.wood, fish: ME.fish - before.fish, stone: ME.stone - before.stone };
+      return r;
+    }
+  };
+  const _render = render;
+  render = function () { stat(); _render() };
 
   boot();
 })();
