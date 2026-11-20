@@ -205,7 +205,10 @@ body.gp-open #top form{display:none}
         <h3>🎁 Story bonus code</h3><p class="mut">New codes drop in our Instagram Story.</p>
         <div class="row"><input id="g_code" placeholder="Bonus code" style="flex:1;margin:0" autocomplete="off"><button id="g_red" type="button">Use</button></div>
         <h3>👥 Invite friends</h3><p class="mut">For every friend who joins with your link: +5 wood, +2 stone. You invited <b>${m.invites}</b>.</p>
-        <div class="row"><button id="g_inv" type="button" data-url="${esc(inviteUrl)}">Copy my invite link</button></div>`;
+        <div class="row"><button id="g_inv" type="button" data-url="${esc(inviteUrl)}">Copy my invite link</button></div>
+        <h3>🔑 Play on another device</h3><p class="mut">Your survivor lives in this browser. Save this private link to play from your phone, laptop or another browser. <b>Don’t share it</b>: anyone with it can play as you.</p>
+        <div class="row"><button id="g_login" type="button" class="alt">Copy my login link</button></div>
+        <input id="g_loginurl" readonly style="display:none;width:100%;margin-top:6px;font-size:12px" value="${esc(location.origin + location.pathname + '?t=' + encodeURIComponent(TOKEN || ''))}">`;
     }
     if (s.followers != null) {
       h += `<h3>🔒 Unlock the island</h3><p class="mut">New areas open as ${HANDLE} grows. Share to unlock them sooner!</p>` +
@@ -216,6 +219,7 @@ body.gp-open #top form{display:none}
     }
     panel.innerHTML = h;
     bind();
+    if (ME && !store.get('sti_saved')) { const lg = $('g_login'); if (lg) { lg.classList.remove('alt'); lg.textContent = '🔑 Save my login link (important!)' } }
   }
 
   function bind() {
@@ -229,7 +233,7 @@ body.gp-open #top form{display:none}
       const u = $('g_u').value, c = $('g_c').value; $('g_err').textContent = ''; j.disabled = true; j.textContent = 'Building your hut…';
       try {
         const r = await rpc('join_island', { p_username: u, p_code: c, p_ref: store.get('sti_ref'), p_look: draftLook });
-        store.set('sti_token', r.token); store.set('sti_ref', null);
+        store.set('sti_token', r.token); store.set('sti_ref', null); store.set('sti_saved', null);
         location.reload();
       } catch (e) { $('g_err').textContent = errText(e); j.disabled = false; j.textContent = 'Join the island' }
     };
@@ -248,6 +252,12 @@ body.gp-open #top form{display:none}
       const url = inv.dataset.url;
       try { if (navigator.share) await navigator.share({ title: 'Survive the Island', text: 'Join me on the island!', url }); else { await navigator.clipboard.writeText(url); toast('Link copied! Send it to your friends.') } }
       catch (e) { try { await navigator.clipboard.writeText(url); toast('Link copied!') } catch (e2) { prompt('Copy your link:', url) } }
+    };
+    const lg = $('g_login'); if (lg) lg.onclick = async () => {
+      const f = $('g_loginurl'), url = f.value;
+      try { await navigator.clipboard.writeText(url); toast('Login link copied! Save it somewhere safe 🔑') }
+      catch (e) { f.style.display = 'block'; f.focus(); f.select(); toast('Copy the link below and save it') }
+      store.set('sti_saved', '1');
     };
     const walk = $('g_walk'); if (walk) walk.onclick = () => {
       const I = window.ISLAND, h = I.byName[ME.username.toLowerCase()]; close();
