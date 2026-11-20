@@ -11,10 +11,10 @@
   const SB_KEY = 'sb_publishable_TAEZAhI9skSMYLb6Z3bkBw_LVpffMzE';
   const HANDLE = '@survive_theisland';
   const UNLOCKS = [
-    { f: 500, name: 'Hidden cave' },
-    { f: 1000, name: 'Volcano summit' },
-    { f: 2500, name: 'Pirate shipwreck' },
-    { f: 5000, name: 'A second island' }
+    { f: 500, name: '💎 Hidden cave', type: 'cave', perk: 'more stone + crystals' },
+    { f: 1000, name: '🌋 Volcano', type: 'volcano', perk: 'obsidian + bonus points' },
+    { f: 2500, name: '⚓ Pirate shipwreck', type: 'wreck', perk: 'loot + pirate gold' },
+    { f: 5000, name: '🏝️ A second island', perk: 'a whole new island' }
   ];
   const LV = [null,
     { name: 'Straw hut' },
@@ -42,7 +42,8 @@
     NOT_ENOUGH: 'Not enough resources yet.',
     USED: 'You already used that code.',
     MAX_LEVEL: 'Your hut is already a fortress!',
-    NO_GOAL: 'No island event right now.'
+    NO_GOAL: 'No island event right now.',
+    LOCKED: 'This place is still locked. Help ' + HANDLE + ' grow to unlock it!'
   };
 
   // ---------- storage + URL params ----------
@@ -100,6 +101,7 @@
       clearTimeout(tm);
       if (r.ok) PLAYERS = await r.json();
     } catch (e) { }
+    try { STATE = await rpc('island_state'); window.STI_followers = STATE.followers || 0 } catch (e) { }
     if (TOKEN) { try { ME = await rpc('me', { p_token: TOKEN }) } catch (e) { if (e.code === 'NOT_FOUND') { TOKEN = null; store.set('sti_token', null) } } }
     window.__MAIN();
     ui();
@@ -130,7 +132,7 @@
 #gp .sw b{width:32px;height:32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #e2d3ad;cursor:pointer}
 #gp .sw b.on{box-shadow:0 0 0 3px var(--coral)}
 #gp ol{margin:6px 0 0;padding-left:24px}#gp li{margin:2px 0}#gp li.me{font-weight:800;color:var(--coral)}
-#gp .lock{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;border-bottom:1px dashed #e2d3ad}
+#gp .lock{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;padding:6px 0;border-bottom:1px dashed #e2d3ad}#gp .lock small{font-size:12px}
 #gp .err{color:#c1121f;font-weight:700;font-size:14px;min-height:1em}
 #gtoast{position:fixed;z-index:9;left:50%;top:18px;transform:translate(-50%,-20px);opacity:0;transition:.25s;pointer-events:none;font-weight:800;max-width:90vw;text-align:center}
 #gtoast.on{opacity:1;transform:translate(-50%,0)}
@@ -207,7 +209,7 @@ body.gp-open #top form{display:none}
     }
     if (s.followers != null) {
       h += `<h3>🔒 Unlock the island</h3><p class="mut">New areas open as ${HANDLE} grows. Share to unlock them sooner!</p>` +
-        UNLOCKS.map(u => `<div class="lock"><span>${s.followers >= u.f ? '✅' : '🔒'} ${u.name}</span><span>${Math.min(s.followers, u.f)}/${u.f} followers</span></div>`).join('');
+        UNLOCKS.map(u => `<div class="lock"><span>${s.followers >= u.f ? '✅' : '🔒'} ${u.name}<br><small class="mut">${u.perk}</small></span><span style="text-align:right">${Math.min(s.followers, u.f)}/${u.f}${u.type ? `<br><button type="button" class="alt" data-place="${u.type}" style="height:32px;padding:0 10px;font-size:13px;margin-top:4px">${s.followers >= u.f ? 'Go there' : 'See it'}</button>` : ''}</span></div>`).join('');
     }
     if (s.leaders && s.leaders.length) {
       h += `<h3>🏆 Top survivors</h3><ol>${s.leaders.map(l => `<li class="${ME && l.username === ME.username ? 'me' : ''}">@${esc(l.username)} · ${l.score} pts</li>`).join('')}</ol>`;
@@ -251,6 +253,7 @@ body.gp-open #top form{display:none}
       const I = window.ISLAND, h = I.byName[ME.username.toLowerCase()]; close();
       if (!I.PLAY.on) I.startPlay(); if (h) { I.PLAY.goal = h; I.PLAY.near = null }
     };
+    panel.querySelectorAll('[data-place]').forEach(b => b.onclick = () => { close(); window.ISLAND.goToSpot(b.dataset.place) });
     const see = $('g_see'); if (see) see.onclick = () => { close(); showMine() };
   }
 
