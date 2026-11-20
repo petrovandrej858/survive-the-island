@@ -46,7 +46,7 @@ button.alt{background:var(--sea)}
 #lab{top:63%;font-size:11cqw}
 #lab small{display:block;font-size:6cqw;color:#ffe2a8;margin-top:1.5cqw}
 #cta{top:62%;font-size:8.5cqw}
-#cta small{display:block;font-size:5.5cqw;color:#ffe2a8;margin-top:2cqw}
+#cta small{display:block;font-size:6.2cqw;color:#ffe2a8;margin-top:2cqw}
 #exit{position:fixed;right:10px;bottom:10px;z-index:9;display:none;opacity:.55;background:#000}
 body.reel #exit{display:block}
 @media(max-width:600px){
@@ -97,9 +97,9 @@ window.__MAIN=function(){
    u: username (no @) · day: day they moved in · c: wall colour (optional) · roof: roof colour (optional)
    x: extras — pool, dog, cat, boat, flag, garden, fire, chest, tower, palm, fountain, pigs, horse, music, totem, server · flag: flag colour
    near: username of a friend whose hut theirs is built next to */
-const CFG={title:'Survive the Island',handle:'@survive_theisland',day:2,
-  hook:'Day 2: 22 new huts and a volcano?',
-  cta:'Follow + comment your @',ctaSmall:'Your hut drops tomorrow · link in bio',sample:false,fly:.6,hold:400};
+const CFG={title:'Survive the Island',handle:'@survive_theisland',day:3,
+  hook:'Day 3: a train station, an aquarium and… a giant rat?',
+  cta:'NEW: Play the game!',ctaSmall:'Secret word: COCONUT · link in bio',sample:false,fly:.6,hold:400};
 const RES=[
 {u:'survive_theisland',day:0,c:'#ff6b4a',x:['flag','fire','boat']},
 {u:'brvino_10',day:1,x:['palm']},
@@ -113,9 +113,9 @@ const RES=[
 {u:'aayushmxn_',day:1,near:'yash___daswani',x:['pigs']},
 {u:'yasshhh28',day:1,near:'yash___daswani',c:'#8d99ae',x:['server']},
 {u:'_abdul_karim._',day:1,x:['garden']},
-{u:'mishrakachhora',day:1,hold:1050,upd:2,upx:['horse'],c:'#90be6d',x:['horse']},
+{u:'mishrakachhora',sx:-5,day:1,hold:1100,upd:3,upx:['black','tall'],c:'#22223b',roof:'#111111',x:['tower','horse']},
 {u:'tanveersingh___1',day:1,hold:1485,upd:2,upx:['rizz room'],x:['dog','rizz']},
-{u:'divyansh__181',day:1,hold:516,upd:2,upx:['artillery'],near:'tanveersingh___1',x:['dog','cannon']},
+{u:'divyansh__181',day:1,hold:800,upd:3,upx:['pool'],near:'tanveersingh___1',x:['dog','cannon','pool']},
 {u:'abby_69._',day:1,c:'#ffb703'},
 {u:'nga4230606736924446505',day:1,x:['boat']},
 {u:'kostantinos.rigkas',day:2,hold:2483,c:'#f1faee',x:['tower','pool','skate']},
@@ -139,7 +139,29 @@ const RES=[
 {u:'silliezt.flaco',day:2,hold:1475,x:['dalmatian','chicken']},
 {u:'shahmeer.not.found',day:2,hold:536,c:'#90e0ef'},
 {u:'dylziiix',day:2,hold:1038,x:['armadillo']},
-{u:'brody_p_willis',day:2,hold:350,x:['boat']}
+{u:'brody_p_willis',day:2,hold:350,x:['boat']},
+{u:'lucky223_ofc',sx:-5,day:3,hold:1300,c:'#6c757d',x:['train']},
+{u:'cody_b_fields',sx:-5,day:3,hold:1100,c:'#90e0ef',x:['aquarium']},
+{u:'dhat22420',sx:-5,day:3,hold:1200,c:'#adb5bd',x:['radio']},
+{u:'katiebegley1',sx:-5,day:3,hold:1000,c:'#ffd6a5',x:['volleyball']},
+{u:'sergent_qwe',sx:-5,day:3,hold:1300,c:'#8d8d8d',x:['rat']},
+{u:'jacobquinn8877',sx:-5,day:3,hold:1100,near:'sergent_qwe',c:'#cdb4db',x:['jellyfish']},
+{u:'champagnessmamiii',sx:-5,day:3,hold:900,c:'#e5e5e5',x:['wolf']},
+{u:'zynxiscool',sx:-5,day:3,hold:800,c:'#4cc9f0',x:['surf','music']},
+{u:'neymr.ax',sx:-5,day:3,hold:1000,c:'#b5e48c',x:['dog','cat','pigs','chicken']},
+{u:'landon_stephens02',day:3,hold:700,x:['tiger']},
+{u:'kxidan00',day:3,hold:650,x:['dog']},
+{u:'shreyx.222',day:3,hold:800,c:'#ffc8dd',x:['garden']},
+{u:'aradhyathakur8762',day:3,hold:400,near:'shreyx.222',c:'#ffafcc'},
+{u:'nryyxieee',day:3,hold:400,near:'shreyx.222',c:'#bde0fe'},
+{u:'nathandavis669',day:3,hold:700,near:'ionthinkykzaqq',c:'#9d4edd',x:['fire']},
+{u:'aabanur_rahman',day:3,hold:550,near:'eikogotnochill',c:'#a2d2ff'},
+{u:'bmtroyal08',day:3,hold:550,x:['flag'],flag:'#0077b6'},
+{u:'howtotouchsomegrass',day:3,hold:550,c:'#ffb703'},
+{u:'best.chamberlain',day:3,hold:450,c:'#f4a261'},
+{u:'alfiejaycoldham',day:3,hold:450},
+{u:'mohd_0sman',day:3,hold:450,c:'#e9c46a'},
+{u:'hudd_700',day:3,hold:450,c:'#2a9d8f'}
 ];
 /* ===== end of edit area ===== */
 if(window.STI_merge)window.STI_merge(RES,CFG);
@@ -183,6 +205,27 @@ function palm(x,y,z,par,s=1){const g=new THREE.Group();g.position.set(x,y,z);g.s
 const PALMS=[];
 
 const EXTRA={
+  aquarium(g){g.scale.setScalar(1.3);mk(B(1.5,.15,.8),'#6b4a2b',0,.08,0,g);const t=new THREE.Mesh(B(1.4,.9,.7),new THREE.MeshPhongMaterial({color:'#48cae4',transparent:true,opacity:.55,shininess:90}));t.position.set(0,.62,0);g.add(t);
+    [['#ff9f1c',-.35,.6],['#ffd166',.3,.8],['#f15bb5',.05,.45]].forEach(([c,x,y])=>{mk(B(.18,.1,.05),c,x,y,0,g);mk(new THREE.ConeGeometry(.06,.1,4),c,x-.13,y,0,g).rotation.z=Math.PI/2});mk(B(1.4,.08,.7),'#e9d8a6',0,.21,0,g)},
+  radio(g){for(let i=0;i<5;i++){const w=.7-i*.12;[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>mk(B(.07,1.05,.07),'#e63946',a*w/2,.5+i*1.0,b*w/2,g));mk(B(w,.06,w),i%2?'#ffffff':'#e63946',0,1.02+i*1.0,0,g)}
+    mk(new THREE.CylinderGeometry(.03,.03,1.2,5),'#cccccc',0,5.6,0,g);mk(new THREE.SphereGeometry(.12,8,6),new THREE.MeshBasicMaterial({color:'#ff3b3b'}),0,6.25,0,g);
+    const d=mk(new THREE.CylinderGeometry(.45,.1,.2,10),'#dddddd',.3,3.6,.3,g);d.rotation.x=1.1},
+  volleyball(g){mk(B(2.2,.04,1.3),'#f6dfa0',0,.03,0,g);[-1.05,1.05].forEach(x=>mk(B(.06,1.3,.06),'#ffffff',x*0,.65,x*.62,g));mk(B(.03,.35,1.24),'#ffffff',0,1.1,0,g);
+    mk(new THREE.SphereGeometry(.13,10,8),'#ffd166',.5,1.4,.2,g)},
+  train(g){g.scale.setScalar(1.35);mk(B(2.4,.08,.6),'#6b4a2b',0,.05,0,g);[-.18,.18].forEach(z=>mk(B(2.4,.05,.05),'#9aa1a6',0,.12,z,g));
+    mk(B(1.1,.5,.45),'#d62828',.15,.42,0,g);mk(B(.45,.45,.47),'#1d3557',-.45,.75,0,g);mk(new THREE.CylinderGeometry(.09,.11,.35,8),'#222222',.55,.82,0,g);
+    [-.3,.1,.5].forEach(x=>[-.24,.24].forEach(z=>mk(new THREE.CylinderGeometry(.14,.14,.06,10),'#222222',x,.2,z,g).rotation.x=Math.PI/2));
+    mk(B(1.3,.06,.8),'#8d99ae',-.2,1.3,-1.05,g);[-.75,.35].forEach(x=>mk(B(.06,1.2,.06),'#6b4a2b',x,.65,-1.05,g))},
+  rat(g){g.scale.setScalar(2.3);const c='#8d8d8d';mk(new THREE.SphereGeometry(.55,10,8),c,0,.55,0,g).scale.set(1.4,.9,1);mk(new THREE.SphereGeometry(.32,10,8),c,.75,.7,0,g);
+    mk(new THREE.ConeGeometry(.18,.4,8),c,1.1,.68,0,g).rotation.z=-Math.PI/2;mk(new THREE.SphereGeometry(.06,6,5),'#ff8fab',1.32,.68,0,g);
+    [-.15,.15].forEach(z=>{mk(new THREE.CylinderGeometry(.18,.18,.04,10),'#ffb3c6',.7,1.0,z*1.6,g).rotation.x=Math.PI/2;mk(new THREE.SphereGeometry(.05,6,5),'#111111',.95,.8,z,g)});
+    const t=mk(new THREE.CylinderGeometry(.04,.06,1.3,6),'#ffb3c6',-1.0,.45,0,g);t.rotation.z=1.2},
+  jellyfish(g){const m=new THREE.MeshPhongMaterial({color:'#e0aaff',transparent:true,opacity:.8,shininess:80});const b=new THREE.Mesh(new THREE.SphereGeometry(.9,14,10,0,Math.PI*2,0,Math.PI/2),m);b.position.y=2.0;g.add(b);
+    for(let i=0;i<8;i++){const a=i/8*6.283;const t=mk(new THREE.CylinderGeometry(.04,.02,1.8,5),'#c77dff',Math.cos(a)*.55,1.1,Math.sin(a)*.55,g);t.rotation.z=Math.sin(a*2)*.15}},
+  wolf(g){const c='#8e9aaf';mk(B(.85,.38,.34),c,0,.55,0,g);mk(B(.36,.34,.32),c,.52,.75,0,g);mk(B(.22,.14,.18),'#dfe7fd',.76,.7,0,g);
+    [-.1,.1].forEach(z=>mk(new THREE.ConeGeometry(.07,.18,4),c,.5,1.0,z,g));[[-.3,-.1],[-.3,.1],[.3,-.1],[.3,.1]].forEach(([x,z])=>mk(B(.1,.36,.1),c,x,.18,z,g));
+    const t=mk(B(.4,.12,.12),c,-.6,.7,0,g);t.rotation.z=.6},
+  surf(g){const b=mk(new THREE.CylinderGeometry(.22,.22,.06,12),'#ff6b4a',0,.9,0,g);b.scale.set(1,1,4.2);b.rotation.x=Math.PI/2-.25;b.position.z=.3},
   pool(g){mk(B(1.6,.22,1.1),'#ffffff',0,.11,0,g);mk(B(1.3,.24,.8),'#41c4e3',0,.12,0,g)},
   dog(g,p){const dc=(p&&p.dogc)||'#b7834a';mk(B(.7,.32,.3),dc,0,.45,0,g);mk(B(.3,.3,.3),dc,.42,.62,0,g);mk(B(.12,.12,.12),'#3b2412',.6,.62,0,g);
     [[-.25,.12],[.25,.12],[-.25,-.12],[.25,-.12]].forEach(([a,b])=>mk(B(.1,.3,.1),'#9c6c38',a,.15,b,g));mk(B(.3,.08,.08),'#9c6c38',-.45,.6,0,g).rotation.z=.6},
@@ -321,6 +364,8 @@ const marker=new THREE.Mesh(new THREE.ConeGeometry(.55,1.1,4),new THREE.MeshBasi
 let fly=null;
 const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 function flyTo(p,t,d=1.6){return new Promise(res=>{fly={p0:cam.position.clone(),t0:ctl.target.clone(),p1:p,t1:t,s:performance.now(),d:d*1000,res};ctl.enabled=false})}
+function showX(h){const o=new V(h.x,0,h.z).normalize(),side=new V(-o.z,0,o.x),base=new V(h.x,0,h.z);const d=h.p.dist||12;
+  return{p:base.clone().addScaledVector(o,d).addScaledVector(side,h.p.sx==null?3:h.p.sx).add(new V(0,d*.6,0)),t:base.clone().addScaledVector(o,.8).add(new V(0,.6,0))}}
 function viewOf(h,dist=10.5,tall=false){const o=new V(h.x,0,h.z);if(o.length()<.1)o.set(1,0,0);o.normalize();const side=new V(-o.z,0,o.x);
   const base=new V(h.x,0,h.z);
   return tall?{p:base.clone().addScaledVector(o,dist).addScaledVector(side,h.p.wide?1.2:-2.2).add(new V(0,dist*.52,0)),t:base.clone().addScaledVector(o,1.6).addScaledVector(side,h.p.wide?.6:-.7).add(new V(0,.7,0))}
@@ -354,7 +399,7 @@ async function reel(){const my=++tok;const ok=()=>my===tok;document.body.classLi
   say('hook',esc(CFG.hook));await flyTo(b.p,new V(0,1,0),3.0);if(!ok())return;
   say('hook',`Day ${dayCount}<br>${huts.length} ${huts.length===1?'hut':'huts'}`);await wait(1300);if(!ok())return;say('hook',null);
   const list=newToday.concat(huts.filter(h=>h.p.upd===dayCount));
-  for(const h of list){const v=viewOf(h,h.p.wide?14:12,true);marker.visible=true;marker.userData.h=h;
+  for(const h of list){const v=h.p.sx!=null?showX(h):viewOf(h,h.p.wide?14:12,true);marker.visible=true;marker.userData.h=h;
     $('lab').style.fontSize=Math.min(11,170/(h.p.u.length+1))+'cqw';const xs=h.p.upd===dayCount&&h.p.day!==dayCount?['upgrade: '+(h.p.upx||[]).join(' + ')]:(h.p.x||[]).map(e=>'+ '+e);say('lab',`@${esc(h.p.u)}${xs.length?`<small>${xs.map(esc).join(' ')}</small>`:''}`);
     (window.__marks=window.__marks||[]).push({u:h.p.u,t:performance.now()});await flyTo(v.p,v.t,CFG.fly||1.0);if(!ok())return;await wait(h.p.hold||CFG.hold||750);if(!ok())return}
   marker.visible=false;say('lab',null);const w=wide(1.05);await flyTo(w.p,w.t,1.6);if(!ok())return;
