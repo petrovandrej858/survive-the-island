@@ -82,7 +82,7 @@ body.play #card{bottom:auto;top:150px}
     <button>Find</button>
   </form>
 </div>
-<div class="hud" id="bottom"><button class="alt" id="tour" type="button">Fly around</button><button class="alt" id="reelBtn" type="button">Reel mode</button><button id="playBtn" type="button">Play</button></div>
+<div class="hud" id="bottom"><button class="alt" id="tour" type="button">Fly around</button><button class="alt" id="reelBtn" type="button">Reel mode</button><button id="playBtn" type="button">Walk</button><button id="gameBtn" type="button">Join the game</button></div>
 <div id="pui"><div class="chip" id="coco">Coconuts 0/20</div><div class="chip" id="hint">Walk: WASD or arrows · Turn camera: Q / E or drag</div>
 <div id="joy"><div id="knob"></div></div><button id="pexit" type="button">Exit</button><div class="chip" id="guide"></div></div>
 <div class="chip" id="card"><button class="x" id="cx" type="button" aria-label="Close">×</button><div id="cardIn"></div></div>
@@ -91,7 +91,7 @@ body.play #card{bottom:auto;top:150px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-{
+window.__MAIN=function(){
 /* ===== EDIT HERE: settings + residents. Each comment = one resident. =====
    u: username (no @) · day: day they moved in · c: wall colour (optional) · roof: roof colour (optional)
    x: extras — pool, dog, cat, boat, flag, garden, fire, chest, tower, palm, fountain, pigs, horse, music, totem, server · flag: flag colour
@@ -141,6 +141,7 @@ const RES=[
 {u:'brody_p_willis',day:2,hold:350,x:['boat']}
 ];
 /* ===== end of edit area ===== */
+if(window.STI_merge)window.STI_merge(RES,CFG);
 
 const $=id=>document.getElementById(id);
 const V=THREE.Vector3;
@@ -333,7 +334,7 @@ $('names').innerHTML=huts.map(h=>`<option value="@${h.p.u}">`).join('');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function show(h,q){const c=$('cardIn');$('card').classList.add('on');
   if(!h){marker.visible=false;c.innerHTML=`<h2>@${esc(q)}</h2><p>No hut yet. Comment your username on the latest reel and it gets built in the next update.</p>`;return}
-  const p=h.p;c.innerHTML=`<h2>@${esc(p.u)}</h2><p>Moved in on day ${p.day}${p.near?` · neighbour of @${esc(p.near)}`:''}</p>`+
+  const p=h.p;c.innerHTML=`<h2>@${esc(p.u)}</h2><p>${p.game?'Joined through the game':'Moved in on day '+p.day}${p.near?` · neighbour of @${esc(p.near)}`:''}</p>`+
    ((p.x||[]).length?`<div class="tags">${p.x.map(e=>`<span>${esc(e)}</span>`).join('')}</div>`:'');
   marker.visible=true;marker.userData.h=h;const v=viewOf(h);flyTo(v.p,v.t,1.8)}
 $('f').addEventListener('submit',e=>{e.preventDefault();const q=$('q').value.trim().replace(/^@/,'').toLowerCase();if(!q)return;
@@ -364,11 +365,11 @@ addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='
 /* ===== PLAY MODE: walk the island as a castaway ===== */
 const PLAY={on:false,yaw:.6,last:0,vx:0,vz:0,keys:{},joy:{x:0,y:0},got:0,goal:null,near:null};
 let player,cols=[],nuts=[];
-function makePlayer(){const g=new THREE.Group();const P={};
-  P.l1=mk(B(.22,.6,.24),'#355070',-.14,.3,0,g);P.l2=mk(B(.22,.6,.24),'#355070',.14,.3,0,g);
-  mk(B(.62,.7,.36),'#f1faee',0,.95,0,g);P.a1=mk(B(.16,.6,.18),'#e0a87a',-.42,.95,0,g);P.a2=mk(B(.16,.6,.18),'#e0a87a',.42,.95,0,g);
-  mk(B(.42,.42,.4),'#e0a87a',0,1.52,0,g);mk(B(.1,.08,.02),'#16292f',-.1,1.56,.21,g);mk(B(.1,.08,.02),'#16292f',.1,1.56,.21,g);
-  mk(new THREE.CylinderGeometry(.5,.5,.06,12),'#e3b55b',0,1.76,0,g);mk(new THREE.ConeGeometry(.28,.3,10),'#e3b55b',0,1.92,0,g);
+function makePlayer(){const g=new THREE.Group();const P={};const LK=(window.STI_look&&window.STI_look())||{},PA=LK.pants||'#355070',SH=LK.shirt||'#f1faee',SK=LK.skin||'#e0a87a',HT=LK.hat||'#e3b55b';
+  P.l1=mk(B(.22,.6,.24),PA,-.14,.3,0,g);P.l2=mk(B(.22,.6,.24),PA,.14,.3,0,g);
+  mk(B(.62,.7,.36),SH,0,.95,0,g);P.a1=mk(B(.16,.6,.18),SK,-.42,.95,0,g);P.a2=mk(B(.16,.6,.18),SK,.42,.95,0,g);
+  mk(B(.42,.42,.4),SK,0,1.52,0,g);mk(B(.1,.08,.02),'#16292f',-.1,1.56,.21,g);mk(B(.1,.08,.02),'#16292f',.1,1.56,.21,g);
+  mk(new THREE.CylinderGeometry(.5,.5,.06,12),HT,0,1.76,0,g);mk(new THREE.ConeGeometry(.28,.3,10),HT,0,1.92,0,g);
   [P.a1,P.a2,P.l1,P.l2].forEach(m=>{m.geometry.translate(0,-.25,0);m.position.y+=.25});
   const arrow=mk(new THREE.ConeGeometry(.3,.9,4),new THREE.MeshBasicMaterial({color:'#ff6b4a'}),0,2.7,0,g);arrow.rotation.x=Math.PI/2;arrow.visible=false;P.arrow=arrow;
   g.userData=P;scene.add(g);return g}
@@ -415,7 +416,7 @@ function playStep(t){const now=performance.now(),dt=Math.min(.05,(now-PLAY.last)
     if(Math.hypot(n.position.x-x,n.position.z-z)<1.3){n.userData.got=1;n.visible=false;PLAY.got++;updCoco();blip(PLAY.got===nuts.length?1320:880)}});
   // nearby hut
   let best=null,bd=4.6;for(const h of huts){const d=Math.hypot(h.x-x,h.z-z);if(d<bd){bd=d;best=h}}
-  if(best!==PLAY.near){PLAY.near=best;if(best){const p=best.p;$('cardIn').innerHTML=`<h2>@${esc(p.u)}</h2><p>${p.u===CFG.handle.slice(1)?'The castaway who started it all':'Moved in on day '+p.day}${p.near?` · neighbour of @${esc(p.near)}`:''}</p>`+((p.x||[]).length?`<div class="tags">${p.x.map(e=>`<span>${esc(e)}</span>`).join('')}</div>`:'');$('card').classList.add('on');blip(520);if(PLAY.goal===best){PLAY.goal=null;$('guide').classList.remove('on');P.arrow.visible=false}}else $('card').classList.remove('on')}
+  if(best!==PLAY.near){PLAY.near=best;if(best){const p=best.p;$('cardIn').innerHTML=`<h2>@${esc(p.u)}</h2><p>${p.u===CFG.handle.slice(1)?'The castaway who started it all':p.game?'Joined through the game':'Moved in on day '+p.day}${p.near?` · neighbour of @${esc(p.near)}`:''}</p>`+((p.x||[]).length?`<div class="tags">${p.x.map(e=>`<span>${esc(e)}</span>`).join('')}</div>`:'');$('card').classList.add('on');blip(520);if(PLAY.goal===best){PLAY.goal=null;$('guide').classList.remove('on');P.arrow.visible=false}}else $('card').classList.remove('on')}
   // guide to searched hut
   if(PLAY.goal){const g=PLAY.goal,d=Math.hypot(g.x-x,g.z-z);P.arrow.visible=true;P.arrow.rotation.set(Math.PI/2,0,0);
     const ang=Math.atan2(g.x-x,g.z-z)-player.rotation.y;P.arrow.position.set(Math.sin(ang)*1.2,2.6,Math.cos(ang)*1.2);P.arrow.rotation.z=-ang;P.arrow.lookAt(new V(g.x,2.6,g.z));P.arrow.rotateX(Math.PI/2);
@@ -437,10 +438,12 @@ function loop(){requestAnimationFrame(loop);const t=clock.getElapsedTime(),now=p
      const hide=near&&u>-.05&&u<.93&&Math.hypot(cx+dx*u-g.position.x,cz+dz*u-g.position.z)<2.8||near&&Math.hypot(g.position.x-cx,g.position.z-cz)<5;g.visible=!hide}}
   renderer.render(scene,cam)}
 
+window.ISLAND={huts,byName,show,viewOf,flyTo,hut,scene,PLAY,startPlay,stopPlay,CFG,esc,resetPlayer:()=>{if(player){scene.remove(player);player=makePlayer();player.visible=PLAY.on}}};
 const start=()=>{build();const w=wide(1.25);cam.position.copy(w.p);ctl.target.copy(w.t);resize();loop()};
 let started=false;const go=()=>{if(!started){started=true;try{start()}catch(err){$('sub').textContent='Could not start 3D: '+err.message}}};
 (document.fonts&&document.fonts.load?Promise.all([document.fonts.load('800 40px "Baloo 2"'),document.fonts.ready]):Promise.resolve()).then(go,go);setTimeout(go,2500);
-}
+};
 </script>
+<script src="game.js"></script>
 </body>
 </html>
