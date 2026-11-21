@@ -97,8 +97,8 @@ window.__MAIN=function(){
    u: username (no @) · day: day they moved in · c: wall colour (optional) · roof: roof colour (optional)
    x: extras — pool, dog, cat, boat, flag, garden, fire, chest, tower, palm, fountain, pigs, horse, music, totem, server · flag: flag colour
    near: username of a friend whose hut theirs is built next to */
-const CFG={title:'Survive the Island',handle:'@survive_theisland',day:3,
-  hook:'Day 3: a train station, an aquarium and… a giant rat?',
+const CFG={title:'Survive the Island',handle:'@survive_theisland',day:4,
+  hook:'Day 4: the tsunami hit. Did your hut survive?',
   cta:'NEW: Play the game!',ctaSmall:'Secret word: COCONUT · link in bio',sample:false,fly:.6,hold:400};
 const RES=[
 {u:'survive_theisland',day:0,c:'#ff6b4a',x:['flag','fire','boat']},
@@ -130,7 +130,7 @@ const RES=[
 {u:'wokeupfedded',day:2,hold:912,x:['shield','cat']},
 {u:'tyl_ef',day:2,hold:1430,x:['music','horse']},
 {u:'katosin37',day:2,hold:599,c:'#a7c957'},
-{u:'kit.e41',day:2,hold:910,c:'#ffc8dd',x:['icecream']},
+{u:'kit.e41',day:2,hold:700,upd:4,upx:['new colour'],c:'#3a86ff',roof:'#ffbe0b',x:['icecream']},
 {u:'adore.amani11',day:2,hold:1275,near:'kit.e41',c:'#cdb4db',x:['icecream']},
 {u:'jfc_marroquin',day:2,hold:372,c:'#e9c46a'},
 {u:'daximusprime_13',day:2,hold:836,x:['cat']},
@@ -144,8 +144,8 @@ const RES=[
 {u:'cody_b_fields',sx:-5,day:3,hold:1166,c:'#90e0ef',x:['aquarium']},
 {u:'dhat22420',sx:-5,day:3,hold:1270,c:'#adb5bd',x:['radio']},
 {u:'katiebegley1',sx:-5,day:3,hold:1305,c:'#ffd6a5',x:['volleyball']},
-{u:'sergent_qwe',sx:-5,day:3,hold:1445,c:'#8d8d8d',x:['rat']},
-{u:'jacobquinn8877',sx:-5,day:3,hold:1955,near:'sergent_qwe',c:'#cdb4db',x:['jellyfish']},
+{u:'sergent_qwe',sx:-5,day:3,hold:1300,upd:4,upx:['rat king'],c:'#8d8d8d',x:['ratking']},
+{u:'jacobquinn8877',sx:-5,day:3,hold:1870,upd:4,upx:['5x jellyfish'],near:'sergent_qwe',c:'#cdb4db',x:['jellyfish'],big:1},
 {u:'champagnessmamiii',sx:-5,day:3,hold:1735,c:'#e5e5e5',x:['wolf']},
 {u:'zynxiscool',sx:-5,day:3,hold:1572,c:'#4cc9f0',x:['surf','music']},
 {u:'neymr.ax',sx:-5,day:3,hold:1526,c:'#b5e48c',x:['dog','cat','pigs','chicken']},
@@ -154,14 +154,22 @@ const RES=[
 {u:'shreyx.222',day:3,hold:1027,c:'#ffc8dd',x:['garden']},
 {u:'aradhyathakur8762',day:3,hold:852,near:'shreyx.222',c:'#ffafcc'},
 {u:'nryyxieee',day:3,hold:1526,near:'shreyx.222',c:'#bde0fe'},
-{u:'nathandavis669',day:3,hold:1398,near:'ionthinkykzaqq',c:'#9d4edd',x:['fire']},
+{u:'nathandavis669',day:3,hold:900,upd:4,upx:['magnet 26'],near:'ionthinkykzaqq',c:'#9d4edd',x:['magnet','fire']},
 {u:'aabanur_rahman',day:3,hold:1154,near:'eikogotnochill',c:'#a2d2ff'},
 {u:'bmtroyal08',day:3,hold:736,x:['flag'],flag:'#0077b6'},
 {u:'howtotouchsomegrass',day:3,hold:1050,c:'#ffb703'},
 {u:'best.chamberlain',day:3,hold:702,c:'#f4a261'},
 {u:'alfiejaycoldham',day:3,hold:643},
 {u:'mohd_0sman',day:3,hold:992,c:'#e9c46a'},
-{u:'hudd_700',day:3,hold:980,c:'#2a9d8f'}
+{u:'hudd_700',day:3,hold:700,upd:4,upx:['hypercar'],c:'#2a9d8f',x:['car']},
+{u:'ma.dyx',day:4,hold:1900,sx:-5,c:'#ff006e',x:['fire']},
+{u:'yaieya__',day:4,hold:1300,near:'silliezt.flaco',c:'#ffd60a',x:['trombone']},
+{u:'j.nash22',day:4,hold:1600,sx:-5,c:'#bc6c25',x:['treehouse']},
+{u:'leo248512',day:4,hold:1000,sx:-5,c:'#ccd5ae',x:['marmots']},
+{u:'cayden_fry',day:4,hold:500,near:'best.chamberlain',c:'#8ecae6'},
+{u:'samjdd18',day:4,hold:500,c:'#6c757d',x:['boat']},
+{u:'kevin.pits',day:4,hold:500,c:'#f28482'},
+{u:'bettythee30',day:4,hold:500,c:'#e76f51',x:['cannon']}
 ];
 /* ===== end of edit area ===== */
 if(window.STI_merge)window.STI_merge(RES,CFG);
@@ -205,6 +213,22 @@ function palm(x,y,z,par,s=1){const g=new THREE.Group();g.position.set(x,y,z);g.s
 const PALMS=[];
 
 const EXTRA={
+  ratking(g){g.position.set(0,0,0);g.rotation.y=0;const r=new THREE.Group();r.position.set(0,2.15,0);g.add(r);EXTRA.rat(r);r.scale.setScalar(1.15);
+    mk(new THREE.CylinderGeometry(.32,.38,.3,6),'#ffd60a',.85,3.4,0,g);[0,1,2,3,4,5].forEach(i=>{const a=i/6*6.283;mk(new THREE.ConeGeometry(.08,.22,4),'#ffd60a',.85+Math.cos(a)*.3,3.66,Math.sin(a)*.3,g)});
+    [-1.1,1.1].forEach(x=>{const q=new THREE.Group();q.position.set(x,0,2.3);q.rotation.y=-Math.PI/2;g.add(q);EXTRA.rat(q);q.scale.setScalar(.55);mk(new THREE.CylinderGeometry(.03,.03,1.6,5),'#6b4a2b',x+.35,.8,2.45,g);mk(new THREE.ConeGeometry(.08,.25,4),'#ced4da',x+.35,1.7,2.45,g)})},
+  treehouse(g){mk(new THREE.CylinderGeometry(.3,.4,3,7),'#6b4a2b',0,1.5,0,g);mk(new THREE.IcosahedronGeometry(1.5,0),'#52b788',0,4.3,0,g);
+    mk(B(1.8,.12,1.8),'#a0522d',0,2.8,0,g);mk(B(1.1,.8,1.0),'#dda15e',0,3.3,0,g);mk(new THREE.ConeGeometry(.9,.6,4),'#bc6c25',0,4.0,0,g).rotation.y=Math.PI/4;
+    for(let i=0;i<6;i++)mk(B(.5,.06,.08),'#8d6e63',.45,.3+i*.45,.35,g)},
+  trombone(g){const m='#ffc300';const t=mk(new THREE.CylinderGeometry(.05,.05,1.6,6),m,0,1.0,0,g);t.rotation.z=Math.PI/2;
+    const t2=mk(new THREE.CylinderGeometry(.05,.05,1.2,6),m,.2,1.25,0,g);t2.rotation.z=Math.PI/2;const b=mk(new THREE.ConeGeometry(.35,.6,10,1,true),m,-.95,1.0,0,g);b.rotation.z=-Math.PI/2;
+    mk(B(.08,1.0,.08),'#6b4a2b',.3,.5,0,g)},
+  magnet(g){const m='#e63946';mk(B(.35,1.4,.35),m,-.55,.9,0,g);mk(B(.35,1.4,.35),m,.55,.9,0,g);mk(new THREE.TorusGeometry(.55,.18,6,12,Math.PI),m,0,1.6,0,g);
+    [-.55,.55].forEach(x=>mk(B(.36,.3,.36),'#dee2e6',x,.25,0,g));
+    const c=document.createElement('canvas');c.width=128;c.height=128;const x=c.getContext('2d');x.fillStyle='#fff';x.font='bold 96px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('26',64,70);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true}));sp.position.set(0,2.6,0);sp.scale.set(1.3,1.3,1);g.add(sp)},
+  car(g){mk(B(1.9,.35,.9),'#ff006e',0,.32,0,g);mk(B(.9,.28,.8),'#111111',-.1,.6,0,g);mk(B(.3,.08,.95),'#111111',-.95,.62,0,g);
+    [[-.6,-.45],[-.6,.45],[.6,-.45],[.6,.45]].forEach(([x,z])=>mk(new THREE.CylinderGeometry(.18,.18,.12,10),'#222222',x,.18,z,g).rotation.x=Math.PI/2)},
+  marmots(g){[[0,0],[.6,.4],[-.5,.5]].forEach(([x,z],i)=>{mk(new THREE.SphereGeometry(.25,8,6),'#a47148',x,.3,z,g).scale.set(1,1.3,1);mk(new THREE.SphereGeometry(.15,8,6),'#a47148',x,.68,z,g);mk(B(.12,.06,.05),'#f1e3d3',x,.66,z+.13,g)})},
   aquarium(g){g.scale.setScalar(1.3);mk(B(1.5,.15,.8),'#6b4a2b',0,.08,0,g);const t=new THREE.Mesh(B(1.4,.9,.7),new THREE.MeshPhongMaterial({color:'#48cae4',transparent:true,opacity:.55,shininess:90}));t.position.set(0,.62,0);g.add(t);
     [['#ff9f1c',-.35,.6],['#ffd166',.3,.8],['#f15bb5',.05,.45]].forEach(([c,x,y])=>{mk(B(.18,.1,.05),c,x,y,0,g);mk(new THREE.ConeGeometry(.06,.1,4),c,x-.13,y,0,g).rotation.z=Math.PI/2});mk(B(1.4,.08,.7),'#e9d8a6',0,.21,0,g)},
   radio(g){for(let i=0;i<5;i++){const w=.7-i*.12;[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>mk(B(.07,1.05,.07),'#e63946',a*w/2,.5+i*1.0,b*w/2,g));mk(B(w,.06,w),i%2?'#ffffff':'#e63946',0,1.02+i*1.0,0,g)}
@@ -220,7 +244,7 @@ const EXTRA={
     mk(new THREE.ConeGeometry(.18,.4,8),c,1.1,.68,0,g).rotation.z=-Math.PI/2;mk(new THREE.SphereGeometry(.06,6,5),'#ff8fab',1.32,.68,0,g);
     [-.15,.15].forEach(z=>{mk(new THREE.CylinderGeometry(.18,.18,.04,10),'#ffb3c6',.7,1.0,z*1.6,g).rotation.x=Math.PI/2;mk(new THREE.SphereGeometry(.05,6,5),'#111111',.95,.8,z,g)});
     const t=mk(new THREE.CylinderGeometry(.04,.06,1.3,6),'#ffb3c6',-1.0,.45,0,g);t.rotation.z=1.2},
-  jellyfish(g){const m=new THREE.MeshPhongMaterial({color:'#e0aaff',transparent:true,opacity:.8,shininess:80});const b=new THREE.Mesh(new THREE.SphereGeometry(.9,14,10,0,Math.PI*2,0,Math.PI/2),m);b.position.y=2.0;g.add(b);
+  jellyfish(g,p){if(p&&p.big){g.scale.setScalar(2.6);g.position.y=-1.2}const m=new THREE.MeshPhongMaterial({color:'#e0aaff',transparent:true,opacity:.8,shininess:80});const b=new THREE.Mesh(new THREE.SphereGeometry(.9,14,10,0,Math.PI*2,0,Math.PI/2),m);b.position.y=2.0;g.add(b);
     for(let i=0;i<8;i++){const a=i/8*6.283;const t=mk(new THREE.CylinderGeometry(.04,.02,1.8,5),'#c77dff',Math.cos(a)*.55,1.1,Math.sin(a)*.55,g);t.rotation.z=Math.sin(a*2)*.15}},
   wolf(g){const c='#8e9aaf';mk(B(.85,.38,.34),c,0,.55,0,g);mk(B(.36,.34,.32),c,.52,.75,0,g);mk(B(.22,.14,.18),'#dfe7fd',.76,.7,0,g);
     [-.1,.1].forEach(z=>mk(new THREE.ConeGeometry(.07,.18,4),c,.5,1.0,z,g));[[-.3,-.1],[-.3,.1],[.3,-.1],[.3,.1]].forEach(([x,z])=>mk(B(.1,.36,.1),c,x,.18,z,g));
