@@ -97,9 +97,9 @@ window.__MAIN=function(){
    u: username (no @) · day: day they moved in · c: wall colour (optional) · roof: roof colour (optional)
    x: extras — pool, dog, cat, boat, flag, garden, fire, chest, tower, palm, fountain, pigs, horse, music, totem, server · flag: flag colour
    near: username of a friend whose hut theirs is built next to */
-const CFG={title:'Survive the Island',handle:'@survive_theisland',day:4,
-  hook:'Day 4: the tsunami hit. Did your hut survive?',
-  cta:'NEW: Play the game!',ctaSmall:'Secret word: COCONUT · link in bio',sample:false,fly:.6,hold:400};
+const CFG={title:'Survive the Island',handle:'@survive_theisland',day:5,
+  hook:'Day 5: a dragon just landed on the island',order:['divyansh__181','sergent_qwe','alexlwkss','j.nash22','virginiaa.p','best.chamberlain','itxd_music_official'],
+  cta:'Follow + comment your @',ctaSmall:'Get a hut before the next storm · link in bio',sample:false,fly:.6,hold:400};
 const RES=[
 {u:'survive_theisland',day:0,c:'#ff6b4a',x:['flag','fire','boat']},
 {u:'brvino_10',day:1,x:['palm']},
@@ -115,7 +115,7 @@ const RES=[
 {u:'_abdul_karim._',day:1,x:['garden']},
 {u:'mishrakachhora',sx:-5,day:1,hold:2153,upd:3,upx:['black','tall'],c:'#22223b',roof:'#111111',x:['tower','horse']},
 {u:'tanveersingh___1',day:1,hold:1485,upd:2,upx:['rizz room'],x:['dog','rizz']},
-{u:'divyansh__181',day:1,hold:1236,upd:3,upx:['pool'],near:'tanveersingh___1',x:['dog','cannon','pool']},
+{u:'divyansh__181',sx:2,dist:16,day:1,hold:1421,upd:5,upx:['huge red dragon'],near:'tanveersingh___1',x:['dog','cannon','pool','dragon']},
 {u:'abby_69._',day:1,c:'#ffb703'},
 {u:'nga4230606736924446505',day:1,x:['boat']},
 {u:'kostantinos.rigkas',day:2,hold:2483,c:'#f1faee',x:['tower','pool','skate']},
@@ -123,7 +123,7 @@ const RES=[
 {u:'ryan_braaten345',day:2,hold:611,x:['chicken']},
 {u:'ionthinkykzaqq',day:2,wide:1,hold:1400,c:'#6d597a',x:['volcano']},
 {u:'bhupendr._.a',day:2,hold:1883,c:'#8d99ae',x:['flag'],flag:'#4cc9f0'},
-{u:'itxd_music_official',day:2,hold:1609,near:'maxiclimber_',c:'#495057',x:['watchtower','flag'],flag:'#ffd166'},
+{u:'itxd_music_official',sx:-5,day:2,hold:2269,upd:5,upx:['defense corps'],near:'maxiclimber_',c:'#495057',x:['barracks','watchtower','flag'],flag:'#ffd166'},
 {u:'leo.aldana_',day:2,hold:762,x:['shed']},
 {u:'eikogotnochill',day:2,hold:350,c:'#ffafcc'},
 {u:'asapsakshm',day:2,hold:779,c:'#3a0ca3',x:['gaming']},
@@ -144,7 +144,7 @@ const RES=[
 {u:'cody_b_fields',sx:-5,day:3,hold:1166,c:'#90e0ef',x:['aquarium']},
 {u:'dhat22420',sx:-5,day:3,hold:1270,c:'#adb5bd',x:['radio']},
 {u:'katiebegley1',sx:-5,day:3,hold:1305,c:'#ffd6a5',x:['volleyball']},
-{u:'sergent_qwe',sx:-5,day:3,hold:1300,upd:4,upx:['rat king'],c:'#8d8d8d',x:['ratking']},
+{u:'sergent_qwe',sx:-5,day:3,hold:1723,upd:5,upx:['castle'],c:'#8d8d8d',roof:'#5c677d',x:['ratking','castle']},
 {u:'jacobquinn8877',sx:-5,day:3,hold:1870,upd:4,upx:['5x jellyfish'],near:'sergent_qwe',c:'#cdb4db',x:['jellyfish'],big:1},
 {u:'champagnessmamiii',sx:-5,day:3,hold:1735,c:'#e5e5e5',x:['wolf']},
 {u:'zynxiscool',sx:-5,day:3,hold:1572,c:'#4cc9f0',x:['surf','music']},
@@ -158,18 +158,20 @@ const RES=[
 {u:'aabanur_rahman',day:3,hold:1154,near:'eikogotnochill',c:'#a2d2ff'},
 {u:'bmtroyal08',day:3,hold:736,x:['flag'],flag:'#0077b6'},
 {u:'howtotouchsomegrass',day:3,hold:1050,c:'#ffb703'},
-{u:'best.chamberlain',day:3,hold:702,c:'#f4a261'},
+{u:'best.chamberlain',day:3,hold:1282,upd:5,upx:['bats'],c:'#f4a261',x:['bats']},
 {u:'alfiejaycoldham',day:3,hold:643},
 {u:'mohd_0sman',day:3,hold:992,c:'#e9c46a'},
 {u:'hudd_700',day:3,hold:700,upd:4,upx:['hypercar'],c:'#2a9d8f',x:['car']},
 {u:'ma.dyx',day:4,hold:1900,sx:-5,c:'#ff006e',x:['fire']},
 {u:'yaieya__',day:4,hold:1300,near:'silliezt.flaco',c:'#ffd60a',x:['trombone']},
-{u:'j.nash22',day:4,hold:1600,sx:-5,c:'#bc6c25',x:['treehouse']},
+{u:'j.nash22',dist:15,day:4,hold:2246,upd:5,upx:['taller + deck'],sx:-5,c:'#bc6c25',x:['treehouse'],tall:1},
 {u:'leo248512',day:4,hold:1000,sx:-5,c:'#ccd5ae',x:['marmots']},
 {u:'cayden_fry',day:4,hold:500,near:'best.chamberlain',c:'#8ecae6'},
 {u:'samjdd18',day:4,hold:500,c:'#6c757d',x:['boat']},
 {u:'kevin.pits',day:4,hold:500,c:'#f28482'},
-{u:'bettythee30',day:4,hold:500,c:'#e76f51',x:['cannon']}
+{u:'bettythee30',day:4,hold:500,c:'#e76f51',x:['cannon']},
+{u:'alexlwkss',dist:16,day:5,hold:2536,sx:-5,c:'#7209b7',x:['giant','tower']},
+{u:'virginiaa.p',day:5,hold:2664,sx:-5,near:'j.nash22',c:'#ff8fab',roof:'#ffc2d1',x:['cow']}
 ];
 /* ===== end of edit area ===== */
 if(window.STI_merge)window.STI_merge(RES,CFG);
@@ -213,10 +215,26 @@ function palm(x,y,z,par,s=1){const g=new THREE.Group();g.position.set(x,y,z);g.s
 const PALMS=[];
 
 const EXTRA={
+  dragon(g){g.position.set(0,2.3,0);g.rotation.y=.4;g.scale.setScalar(1.7);const r='#d00000',d='#9d0208';
+    mk(new THREE.SphereGeometry(.7,10,8),r,0,.5,0,g).scale.set(1.5,.8,.9);const n=mk(new THREE.CylinderGeometry(.22,.32,1.1,8),r,.95,1.1,0,g);n.rotation.z=-.7;
+    mk(B(.6,.4,.42),r,1.45,1.55,0,g);mk(B(.4,.18,.36),d,1.85,1.48,0,g);[-.12,.12].forEach(z=>{mk(new THREE.ConeGeometry(.07,.35,4),'#ffd166',1.35,1.9,z,g);mk(new THREE.SphereGeometry(.05,6,5),'#ffea00',1.62,1.62,z*1.6,g)});
+    [-1,1].forEach(sd=>{const w=mk(B(1.5,.06,1.1),d,-.1,1.0,sd*.9,g);w.rotation.x=sd*.55;w.rotation.y=sd*.2});
+    const t=mk(new THREE.ConeGeometry(.25,1.6,6),r,-1.5,.35,0,g);t.rotation.z=Math.PI/2+.3;for(let i=0;i<4;i++)mk(new THREE.ConeGeometry(.1,.25,4),'#ffd166',-.6+i*.35,.95,0,g)},
+  castle(g){g.position.set(0,0,0);g.rotation.y=0;const st='#8d99ae';[[-1.5,-1.5],[1.5,-1.5],[-1.5,1.5],[1.5,1.5]].forEach(([x,z])=>{mk(new THREE.CylinderGeometry(.5,.55,3,8),st,x,1.5,z,g);mk(new THREE.ConeGeometry(.65,1,8),'#5c677d',x,3.5,z,g);mk(B(.04,.8,.04),'#333',x,4.2,z,g);mk(B(.4,.25,.02),'#ffd60a',x+.2,4.45,z,g)});
+    [[0,-1.5,3,.3],[0,1.5,3,.3],[-1.5,0,.3,3],[1.5,0,.3,3]].forEach(([x,z,w,dd],i)=>{if(i===1){mk(B(1,1.2,.3),st,-1,.6,1.5,g);mk(B(1,1.2,.3),st,1,.6,1.5,g)}else mk(B(w,1.2,dd),st,x,.6,z,g)})},
+  giant(g){g.scale.setScalar(1.7);const sk='#e0a87a';mk(B(.5,1.3,.4),'#1d3557',-.2,.65,0,g);mk(B(.5,1.3,.4),'#1d3557',.2,.65,0,g);mk(B(1.1,1.3,.6),'#2a9d8f',0,1.95,0,g);
+    mk(B(.3,1.1,.3),sk,-.7,2.0,0,g);mk(B(.3,1.1,.3),sk,.7,2.0,0,g);mk(B(.7,.7,.6),sk,0,2.95,0,g);[-.3,.3].forEach(x=>mk(new THREE.SphereGeometry(.2,8,6),'#f4a0a0',x,2.85,.25,g));mk(new THREE.SphereGeometry(.1,6,5),'#7a3e2b',0,2.85,.33,g);
+    [0,1,2].forEach(i=>{const c=mk(new THREE.SphereGeometry(.18+i*.08,8,6),'#e9f5ff',0,2.85,.6+i*.45,g)})},
+  bats(g){g.position.set(0,0,0);for(let i=0;i<7;i++){const a=i/7*6.283,r=2.2+(i%2)*.6,y=3+(i%3)*.5;const b=new THREE.Group();b.position.set(Math.cos(a)*r,y,Math.sin(a)*r);b.rotation.y=-a;g.add(b);
+    mk(B(.18,.18,.25),'#1b1b1b',0,0,0,b);[-1,1].forEach(sd=>{const w=mk(B(.06,.04,.45),'#2b2b2b',0,.05,sd*.3,b);w.rotation.x=sd*.5})}},
+  cow(g){mk(B(1.1,.55,.55),'#ffffff',0,.75,0,g);[[-.3,.2],[.35,-.1]].forEach(([x,z])=>mk(B(.3,.3,.02),'#111',x,.8,.28,g));mk(B(.4,.38,.36),'#ffffff',.7,.95,0,g);mk(B(.12,.16,.3),'#ffafcc',.92,.88,0,g);
+    [-.15,.15].forEach(z=>mk(new THREE.ConeGeometry(.04,.14,4),'#e9c46a',.7,1.2,z,g));[[-.4,-.18],[-.4,.18],[.4,-.18],[.4,.18]].forEach(([x,z])=>mk(B(.12,.5,.12),'#ffffff',x,.25,z,g))},
+  barracks(g){mk(new THREE.ConeGeometry(1.1,1.2,4),'#606c38',0,.6,0,g).rotation.y=Math.PI/4;mk(B(.04,1.8,.04),'#6b4a2b',1.2,.9,0,g);mk(B(.6,.35,.02),'#ffd166',1.5,1.6,0,g);
+    [[-.4,1.2],[.2,1.3],[.8,1.2]].forEach(([x,z])=>{mk(B(.22,.5,.18),'#495057',x,.25,z,g);mk(B(.2,.2,.18),'#e0a87a',x,.62,z,g);mk(B(.24,.08,.22),'#283618',x,.76,z,g)})},
   ratking(g){g.position.set(0,0,0);g.rotation.y=0;const r=new THREE.Group();r.position.set(0,2.15,0);g.add(r);EXTRA.rat(r);r.scale.setScalar(1.15);
     mk(new THREE.CylinderGeometry(.32,.38,.3,6),'#ffd60a',.85,3.4,0,g);[0,1,2,3,4,5].forEach(i=>{const a=i/6*6.283;mk(new THREE.ConeGeometry(.08,.22,4),'#ffd60a',.85+Math.cos(a)*.3,3.66,Math.sin(a)*.3,g)});
     [-1.1,1.1].forEach(x=>{const q=new THREE.Group();q.position.set(x,0,2.3);q.rotation.y=-Math.PI/2;g.add(q);EXTRA.rat(q);q.scale.setScalar(.55);mk(new THREE.CylinderGeometry(.03,.03,1.6,5),'#6b4a2b',x+.35,.8,2.45,g);mk(new THREE.ConeGeometry(.08,.25,4),'#ced4da',x+.35,1.7,2.45,g)})},
-  treehouse(g){mk(new THREE.CylinderGeometry(.3,.4,3,7),'#6b4a2b',0,1.5,0,g);mk(new THREE.IcosahedronGeometry(1.5,0),'#52b788',0,4.3,0,g);
+  treehouse(g,p){if(p&&p.tall){g.scale.set(1,1.45,1);mk(B(3,.12,3),'#a0522d',0,2.2,0,g);[[-1.45,0],[1.45,0],[0,-1.45],[0,1.45]].forEach(([x,z])=>mk(B(x?.08:3,.5,x?3:.08),'#8d6e63',x,2.5,z,g))}mk(new THREE.CylinderGeometry(.3,.4,3,7),'#6b4a2b',0,1.5,0,g);mk(new THREE.IcosahedronGeometry(1.5,0),'#52b788',0,4.3,0,g);
     mk(B(1.8,.12,1.8),'#a0522d',0,2.8,0,g);mk(B(1.1,.8,1.0),'#dda15e',0,3.3,0,g);mk(new THREE.ConeGeometry(.9,.6,4),'#bc6c25',0,4.0,0,g).rotation.y=Math.PI/4;
     for(let i=0;i<6;i++)mk(B(.5,.06,.08),'#8d6e63',.45,.3+i*.45,.35,g)},
   trombone(g){const m='#ffc300';const t=mk(new THREE.CylinderGeometry(.05,.05,1.6,6),m,0,1.0,0,g);t.rotation.z=Math.PI/2;
@@ -422,7 +440,7 @@ async function reel(){const my=++tok;const ok=()=>my===tok;document.body.classLi
   const a=wide(2.1),b=wide(.8);cam.position.copy(a.p);ctl.target.copy(a.t);
   say('hook',esc(CFG.hook));await flyTo(b.p,new V(0,1,0),3.0);if(!ok())return;
   say('hook',`Day ${dayCount}<br>${huts.length} ${huts.length===1?'hut':'huts'}`);await wait(1300);if(!ok())return;say('hook',null);
-  const list=newToday.concat(huts.filter(h=>h.p.upd===dayCount));
+  let list=newToday.concat(huts.filter(h=>h.p.upd===dayCount));if(CFG.order){const o=CFG.order;list=list.filter(h=>o.includes(h.p.u)).sort((a,b)=>o.indexOf(a.p.u)-o.indexOf(b.p.u)).concat(list.filter(h=>!o.includes(h.p.u)))}
   for(const h of list){const v=h.p.sx!=null?showX(h):viewOf(h,h.p.wide?14:12,true);marker.visible=true;marker.userData.h=h;
     $('lab').style.fontSize=Math.min(11,170/(h.p.u.length+1))+'cqw';const xs=h.p.upd===dayCount&&h.p.day!==dayCount?['upgrade: '+(h.p.upx||[]).join(' + ')]:(h.p.x||[]).map(e=>'+ '+e);say('lab',`@${esc(h.p.u)}${xs.length?`<small>${xs.map(esc).join(' ')}</small>`:''}`);
     (window.__marks=window.__marks||[]).push({u:h.p.u,t:performance.now()});await flyTo(v.p,v.t,CFG.fly||1.0);if(!ok())return;await wait(h.p.hold||CFG.hold||750);if(!ok())return}
