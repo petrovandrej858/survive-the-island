@@ -97,8 +97,8 @@ window.__MAIN=function(){
    u: username (no @) · day: day they moved in · c: wall colour (optional) · roof: roof colour (optional)
    x: extras — pool, dog, cat, boat, flag, garden, fire, chest, tower, palm, fountain, pigs, horse, music, totem, server · flag: flag colour
    near: username of a friend whose hut theirs is built next to */
-const CFG={title:'Survive the Island',handle:'@survive_theisland',day:5,
-  hook:'Day 5: a dragon just landed on the island',order:['divyansh__181','sergent_qwe','alexlwkss','j.nash22','virginiaa.p','best.chamberlain','itxd_music_official'],
+const CFG={title:'Survive the Island',handle:'@survive_theisland',day:6,
+  hook:'Someone wants to attack the island',
   cta:'Follow + comment your @',ctaSmall:'Get a hut before the next storm · link in bio',sample:false,fly:.6,hold:400};
 const RES=[
 {u:'survive_theisland',day:0,c:'#ff6b4a',x:['flag','fire','boat']},
@@ -130,7 +130,7 @@ const RES=[
 {u:'wokeupfedded',day:2,hold:912,x:['shield','cat']},
 {u:'tyl_ef',day:2,hold:1430,x:['music','horse']},
 {u:'katosin37',day:2,hold:599,c:'#a7c957'},
-{u:'kit.e41',day:2,hold:700,upd:4,upx:['new colour'],c:'#3a86ff',roof:'#ffbe0b',x:['icecream']},
+{u:'kit.e41',day:2,hold:700,upd:6,upx:['crown'],c:'#3a86ff',roof:'#ffbe0b',x:['icecream','crown'],dist:14},
 {u:'adore.amani11',day:2,hold:1275,near:'kit.e41',c:'#cdb4db',x:['icecream']},
 {u:'jfc_marroquin',day:2,hold:372,c:'#e9c46a'},
 {u:'daximusprime_13',day:2,hold:836,x:['cat']},
@@ -144,7 +144,7 @@ const RES=[
 {u:'cody_b_fields',sx:-5,day:3,hold:1166,c:'#90e0ef',x:['aquarium']},
 {u:'dhat22420',sx:-5,day:3,hold:1270,c:'#adb5bd',x:['radio']},
 {u:'katiebegley1',sx:-5,day:3,hold:1305,c:'#ffd6a5',x:['volleyball']},
-{u:'sergent_qwe',sx:-5,day:3,hold:1723,upd:5,upx:['castle'],c:'#8d8d8d',roof:'#5c677d',x:['ratking','castle']},
+{u:'sergent_qwe',sx:-5,day:3,hold:1723,upd:6,upx:['royal speech + jellyfish gift'],c:'#8d8d8d',roof:'#5c677d',x:['ratking','castle','commoners'],dist:15},
 {u:'jacobquinn8877',sx:-5,day:3,hold:1870,upd:4,upx:['5x jellyfish'],near:'sergent_qwe',c:'#cdb4db',x:['jellyfish'],big:1},
 {u:'champagnessmamiii',sx:-5,day:3,hold:1735,c:'#e5e5e5',x:['wolf']},
 {u:'zynxiscool',sx:-5,day:3,hold:1572,c:'#4cc9f0',x:['surf','music']},
@@ -166,11 +166,16 @@ const RES=[
 {u:'yaieya__',day:4,hold:1300,near:'silliezt.flaco',c:'#ffd60a',x:['trombone']},
 {u:'j.nash22',dist:15,day:4,hold:2246,upd:5,upx:['taller + deck'],sx:-5,c:'#bc6c25',x:['treehouse'],tall:1},
 {u:'leo248512',day:4,hold:1000,sx:-5,c:'#ccd5ae',x:['marmots']},
-{u:'cayden_fry',day:4,hold:500,near:'best.chamberlain',c:'#8ecae6'},
+{u:'cayden_fry',day:4,hold:700,upd:6,upx:['UFO'],near:'best.chamberlain',c:'#8ecae6',x:['ufo'],dist:15},
 {u:'samjdd18',day:4,hold:500,c:'#6c757d',x:['boat']},
 {u:'kevin.pits',day:4,hold:500,c:'#f28482'},
 {u:'bettythee30',day:4,hold:500,c:'#e76f51',x:['cannon']},
-{u:'alexlwkss',dist:16,day:5,hold:2536,sx:-5,c:'#7209b7',x:['giant','tower']},
+{u:'alexlwkss',dist:16,day:5,hold:700,upd:6,upx:['tsunami walls'],sx:-5,c:'#7209b7',x:['giant','tower','walls']},
+{u:'5o3.brieee',day:6,hold:600,c:'#fb8500',x:['cat']},
+{u:'devonte.__',day:6,hold:600,sx:-5,c:'#ffb703',x:['fox']},
+{u:'v_x_z_q',day:6,hold:500,c:'#90be6d'},
+{u:'shelonda_dabiggest96',day:6,hold:700,sx:-5,dist:15,c:'#6d597a',x:['gorilla','dino']},
+{u:'deacon.jacobs01',day:6,hold:700,dist:15,c:'#4361ee',x:['forcefield']},
 {u:'virginiaa.p',day:5,hold:2664,sx:-5,near:'j.nash22',c:'#ff8fab',roof:'#ffc2d1',x:['cow']}
 ];
 /* ===== end of edit area ===== */
@@ -215,6 +220,26 @@ function palm(x,y,z,par,s=1){const g=new THREE.Group();g.position.set(x,y,z);g.s
 const PALMS=[];
 
 const EXTRA={
+  crown(g){g.position.set(0,4.2,0);const m=new THREE.MeshPhongMaterial({color:'#ffd60a',emissive:'#7a5c00',shininess:90});mk(new THREE.CylinderGeometry(.75,.75,.35,10,1,true),m,0,0,0,g).material.side=THREE.DoubleSide;
+    for(let i=0;i<8;i++){const a=i/8*6.283;mk(new THREE.ConeGeometry(.13,.4,4),m,Math.cos(a)*.72,.35,Math.sin(a)*.72,g);mk(new THREE.SphereGeometry(.07,6,5),i%2?'#e63946':'#4cc9f0',Math.cos(a)*.76,.05,Math.sin(a)*.76,g)}},
+  ufo(g){g.position.set(0,5.2,0);mk(new THREE.CylinderGeometry(.4,1.5,.35,16),'#adb5bd',0,0,0,g);mk(new THREE.SphereGeometry(.55,12,8,0,6.283,0,Math.PI/2),new THREE.MeshPhongMaterial({color:'#80ffdb',transparent:true,opacity:.8}),0,.15,0,g);
+    for(let i=0;i<8;i++){const a=i/8*6.283;mk(new THREE.SphereGeometry(.08,6,5),new THREE.MeshBasicMaterial({color:i%2?'#ffd60a':'#ff006e'}),Math.cos(a)*1.25,-.12,Math.sin(a)*1.25,g)}
+    const beam=new THREE.Mesh(new THREE.ConeGeometry(1.4,4.6,16,1,true),new THREE.MeshBasicMaterial({color:'#b9fbc0',transparent:true,opacity:.22,side:THREE.DoubleSide}));beam.position.y=-2.4;g.add(beam)},
+  forcefield(g){g.position.set(0,0,0);const f=new THREE.Mesh(new THREE.IcosahedronGeometry(3.2,1),new THREE.MeshPhongMaterial({color:'#4cc9f0',emissive:'#1a6fa0',transparent:true,opacity:.28,flatShading:true,side:THREE.DoubleSide}));f.position.y=.6;g.add(f);
+    const w=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(3.21,1)),new THREE.LineBasicMaterial({color:'#bdf4ff',transparent:true,opacity:.7}));w.position.y=.6;g.add(w)},
+  walls(g){g.position.set(0,0,0);g.rotation.y=0;for(let i=0;i<14;i++){const a=i/14*6.283;if(i===3)continue;const b=mk(B(1.15,1.5,.35),i%2?'#8d99ae':'#adb5bd',Math.cos(a)*2.7,.75,Math.sin(a)*2.7,g);b.rotation.y=-a+Math.PI/2}},
+  commoners(g){g.position.set(0,0,0);g.rotation.y=0;for(let i=0;i<9;i++){const r=new THREE.Group();const row=Math.floor(i/3),col=i%3;r.position.set((col-1)*.9,0,3.4+row*.75);r.rotation.y=Math.PI/2;g.add(r);EXTRA.rat(r);r.scale.setScalar(.38)}
+    const j=new THREE.Group();j.position.set(1.7,0,2.2);g.add(j);EXTRA.jellyfish(j);j.scale.setScalar(.45);
+    const c=document.createElement('canvas');c.width=256;c.height=128;const x=c.getContext('2d');x.fillStyle='#fff';x.beginPath();x.roundRect(6,6,244,100,30);x.fill();x.fillStyle='#222';x.font='bold 40px sans-serif';x.textAlign='center';x.fillText('LONG LIVE',128,52);x.fillText('THE RATS!',128,94);
+    const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c)}));sp.position.set(-1.2,5.2,.6);sp.scale.set(2.6,1.3,1);g.add(sp)},
+  fox(g){g.scale.setScalar(1.8);const o='#f77f00';mk(B(.8,.34,.3),o,0,.45,0,g);mk(B(.34,.32,.3),o,.48,.62,0,g);mk(B(.2,.12,.14),'#ffffff',.68,.56,0,g);mk(B(.06,.06,.06),'#111',.79,.58,0,g);
+    [-.08,.08].forEach(z=>mk(new THREE.ConeGeometry(.07,.2,4),o,.45,.86,z,g));[[-.28,-.1],[-.28,.1],[.28,-.1],[.28,.1]].forEach(([x,z])=>mk(B(.08,.3,.08),'#3d2b1f',x,.15,z,g));
+    const t=mk(new THREE.ConeGeometry(.16,.7,6),o,-.6,.6,0,g);t.rotation.z=Math.PI/2+.5;mk(new THREE.SphereGeometry(.1,6,5),'#ffffff',-.88,.78,0,g)},
+  gorilla(g){g.scale.setScalar(1.5);const c='#3a3a3a';mk(B(1,1.1,.7),c,0,1.2,0,g);mk(B(.55,.5,.5),c,0,2.0,.05,g);mk(B(.35,.25,.1),'#6b5b4b',0,1.95,.3,g);
+    [-.65,.65].forEach(x=>mk(B(.3,1.2,.3),c,x,.9,.1,g));[-.25,.25].forEach(x=>mk(B(.3,.6,.35),c,x,.3,0,g))},
+  dino(g){g.scale.setScalar(1.5);const c='#2d6a4f';mk(B(.9,1.2,.7),c,0,1.0,0,g);const n=mk(B(.55,.45,.6),c,.25,1.85,0,g);mk(B(.4,.2,.5),'#40916c',.55,1.7,0,g);
+    [-.2,.2].forEach(z=>mk(B(.35,.6,.25),c,-.05,.3,z*1.4,g));const t=mk(new THREE.ConeGeometry(.3,1.4,6),c,-.75,.6,0,g);t.rotation.z=Math.PI/2+.4;
+    for(let i=0;i<5;i++)mk(new THREE.ConeGeometry(.1,.25,4),'#95d5b2',-.3+i*.15,1.7-i*.1+.15,0,g)},
   dragon(g){g.position.set(0,2.3,0);g.rotation.y=.4;g.scale.setScalar(1.7);const r='#d00000',d='#9d0208';
     mk(new THREE.SphereGeometry(.7,10,8),r,0,.5,0,g).scale.set(1.5,.8,.9);const n=mk(new THREE.CylinderGeometry(.22,.32,1.1,8),r,.95,1.1,0,g);n.rotation.z=-.7;
     mk(B(.6,.4,.42),r,1.45,1.55,0,g);mk(B(.4,.18,.36),d,1.85,1.48,0,g);[-.12,.12].forEach(z=>{mk(new THREE.ConeGeometry(.07,.35,4),'#ffd166',1.35,1.9,z,g);mk(new THREE.SphereGeometry(.05,6,5),'#ffea00',1.62,1.62,z*1.6,g)});
